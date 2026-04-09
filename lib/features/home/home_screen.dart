@@ -1,40 +1,50 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key); // fixing that warning too
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Guardian Path")),
+      appBar: AppBar(title: const Text("Guardian Path")),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/create-account'),
-              child: Text("Simulation 1 (Account Setup)"),
+              child: const Text("Simulation 1 (Account Setup)"),
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/sim2-intro'),
-              child: Text("Simulation 2 (Scam Detection)"),
+              child: const Text("Simulation 2 (Scam Detection)"),
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
+
+            // 👇 YOUR NEW BUTTON
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/sim3-intro'),
+              child: const Text("Simulation 3 (Job Scam)"),
+            ),
+
+            const SizedBox(height: 10),
 
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/quiz'),
-              child: Text("Quiz"),
+              child: const Text("Quiz"),
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/dashboard'),
-              child: Text("Dashboard"),
+              child: const Text("Dashboard"),
             ),
           ],
         ),
