@@ -15,6 +15,7 @@ import '../features/simulation2/payment_scam/link_detection_screen.dart';
 import '../features/simulation2/payment_scam/result_screen.dart';
 
 // Quiz
+import '../features/quiz/level_map_screen.dart';
 import '../features/quiz/quiz_screen.dart';
 import '../features/quiz/result_screen.dart';
 
@@ -45,8 +46,9 @@ class AppRoutes {
     // -------------------------
     // QUIZ ROUTES
     // -------------------------
-    '/quiz': (context) => QuizScreen(),
-    '/quiz-result': (context) => QuizResultScreen(),
+   // '/quiz': (context) => QuizScreen(),
+    //'/quiz-result': (context) => ResultScreen(),
+    '/levels': (context) => LevelMapScreen(),
 
     // -------------------------
     // DASHBOARD
