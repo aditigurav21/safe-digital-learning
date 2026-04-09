@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 // Home
 import '../features/home/home_screen.dart';
 
-// Simulation 1 (Account Setup)
-import '../features/simulation1/account_setup/create_account_screen.dart';
-import '../features/simulation1/account_setup/password_screen.dart';
-import '../features/simulation1/account_setup/otp_screen.dart';
-import '../features/simulation1/account_setup/success_screen.dart';
-
-// Simulation 2 (Scam Detection)
-import '../features/simulation2/payment_scam/intro_screen.dart';
-import '../features/simulation2/payment_scam/link_detection_screen.dart';
-import '../features/simulation2/payment_scam/result_screen.dart';
-
+// -------------------------
+// SIMULATION 1 (Gov Scheme)
+// -------------------------
+import '../features/simulation1/gov_scheme/intro_screen.dart';
+import '../features/simulation1/gov_scheme/scam_examples_screen.dart';
+import '../features/simulation1/gov_scheme/form_screen.dart';
+import '../features/simulation1/gov_scheme/otp_screen.dart';
+import '../features/simulation1/gov_scheme/link_check_screen.dart';
+import '../features/simulation1/gov_scheme/success_screen.dart';
+import '../features/simulation1/gov_scheme/call_screen.dart';
 // Quiz
+
 import '../features/quiz/level_map_screen.dart';
 import '../features/quiz/quiz_screen.dart';
 import '../features/quiz/result_screen.dart';
@@ -22,6 +22,9 @@ import '../features/quiz/result_screen.dart';
 // Dashboard
 import '../features/dashboard/dashboard_screen.dart';
 
+
+import '../features/simulation1/quiz/sim1_quiz_screen.dart';
+import '../features/simulation1/quiz/sim1_result.dart';
 class AppRoutes {
   static Map<String, WidgetBuilder> routes = {
 
@@ -29,14 +32,17 @@ class AppRoutes {
     '/': (context) => HomeScreen(),
 
     // -------------------------
-    // SIMULATION 1 ROUTES
+    // SIMULATION 1 (YOUR MODULE)
     // -------------------------
-    '/create-account': (context) => CreateAccountScreen(),
-    '/password': (context) => PasswordScreen(),
-    '/otp': (context) => OTPScreen(),
-    '/success': (context) => SuccessScreen(),
+    '/sim1-intro': (context) => IntroScreen(),
+    '/sim1-examples': (context) => ScamExamplesScreen(),
+    '/sim1-form': (context) => FormScreen(),
+    '/sim1-otp': (context) => OtpScreen(),
+    '/sim1-link': (context) => LinkCheckScreen(),
+    '/sim1-success': (context) => SuccessScreen(),
 
     // -------------------------
+
     // SIMULATION 2 ROUTES
     // -------------------------
     '/sim2-intro': (context) => IntroScreen(),
@@ -54,5 +60,11 @@ class AppRoutes {
     // DASHBOARD
     // -------------------------
     '/dashboard': (context) => DashboardScreen(),
+
+    // QUIZ
+   '/sim1-quiz': (context) => Sim1QuizScreen(),
+'/sim1-quiz-result': (context) => Sim1ResultScreen(),
+'/sim1-call': (context) => CallScreen(),
+
   };
 }

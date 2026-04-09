@@ -233,30 +233,36 @@ class _MissionCard extends StatelessWidget {
             ),
             const SizedBox(width: 12),
 
+
             // FIXED OVERFLOW HERE
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    m.title,
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    m.description,
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        m.title,
+        style: TextStyle(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      Text(
+        m.description,
+        style: TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 12,
+        ),
+      ),
+    ],
+  ),
+),
 
-            Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.textMuted),
+ElevatedButton(
+  onPressed: () => Navigator.pushNamed(context, m.route),
+  child: Text("Start"),
+),
+
+Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.textMuted),
           ],
         ),
       ),
