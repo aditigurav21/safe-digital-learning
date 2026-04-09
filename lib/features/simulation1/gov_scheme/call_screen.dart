@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class CallScreen extends StatefulWidget {
   const CallScreen({super.key});
@@ -9,6 +10,32 @@ class CallScreen extends StatefulWidget {
 
 class _CallScreenState extends State<CallScreen> {
   bool callAccepted = false;
+  final AudioPlayer player = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    playRingtone();
+  }
+
+  void playRingtone() async {
+    await player.play(AssetSource('audio/ringtone.mp3'));
+  }
+
+  void playScamVoice() async {
+    await player.stop();
+    await player.play(AssetSource('audio/scam_voice.mp3'));
+  }
+
+  void stopAudio() async {
+    await player.stop();
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +77,7 @@ class _CallScreenState extends State<CallScreen> {
             // ❌ Reject
             GestureDetector(
               onTap: () {
+                stopAudio();
                 Navigator.pop(context);
               },
               child: Column(
@@ -71,6 +99,7 @@ class _CallScreenState extends State<CallScreen> {
                 setState(() {
                   callAccepted = true;
                 });
+                playScamVoice();
               },
               child: Column(
                 children: const [
@@ -92,7 +121,7 @@ class _CallScreenState extends State<CallScreen> {
     );
   }
 
-  // 📞 Scam Conversation UI
+  // 📞 Conversation UI
   Widget buildCallConversation() {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -115,10 +144,8 @@ class _CallScreenState extends State<CallScreen> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Text(
-              "Hello sir,\n\n"
-              "You are eligible for ₹5000 government subsidy.\n"
-              "To receive money immediately, please tell your OTP.\n\n"
-              "This is urgent, otherwise your benefit will expire.",
+              "Scammer is speaking...\n\n"
+              "They are asking for your OTP urgently.",
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
@@ -132,55 +159,46 @@ class _CallScreenState extends State<CallScreen> {
 
           const SizedBox(height: 20),
 
-          // ❌ Share OTP (wrong)
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {
-                showResult(false);
-              },
-              child: const Text("Share OTP ❌"),
-            ),
+          // ❌ Wrong
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              showResult(false);
+            },
+            child: const Text("Share OTP ❌"),
           ),
 
           const SizedBox(height: 10),
 
-          // ✅ Do NOT share OTP (correct)
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {
-                showResult(true);
-              },
-              child: const Text("Do NOT Share OTP ✅"),
-            ),
+          // ✅ Correct
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            onPressed: () {
+              showResult(true);
+            },
+            child: const Text("Do NOT Share OTP ✅"),
           ),
-
-          const SizedBox(height: 30),
         ],
       ),
     );
   }
 
-  // 🔥 Result Popup
-  void showResult(bool isSafe) {
+  void showResult(bool safe) {
+    stopAudio();
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(isSafe ? "Correct ✅" : "Scam Alert ❌"),
+        title: Text(safe ? "Correct ✅" : "Scam ❌"),
         content: Text(
-          isSafe
-              ? "Good job! Real officers never ask for OTP."
-              : "This was a scam call!\n\nNever share OTP on phone calls.",
+          safe
+              ? "Good! Never share OTP on calls."
+              : "This was a scam. Never share OTP on calls.",
         ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-
-              // 👉 Move to OTP Screen
               Navigator.pushNamed(context, '/sim1-otp');
             },
             child: const Text("Continue"),
