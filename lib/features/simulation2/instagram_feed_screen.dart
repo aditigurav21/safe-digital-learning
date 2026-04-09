@@ -389,6 +389,7 @@ class _InstagramFeedScreenState extends State<InstagramFeedScreen> {
     // Show a red flag hint before navigating
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) => AlertDialog(
         shape:
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -427,6 +428,7 @@ class _InstagramFeedScreenState extends State<InstagramFeedScreen> {
         ],
       ),
     );
+    //_scamAdTapped = false;
   }
 
   Widget _buildInstagramBottomBar() {
