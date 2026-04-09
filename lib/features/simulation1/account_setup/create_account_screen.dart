@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class CreateAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -7,7 +9,9 @@ class CreateAccountScreen extends StatelessWidget {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(decoration: InputDecoration(labelText: "Email")),
+            TextField(
+              decoration: InputDecoration(labelText: "Email"),
+            ),
             SizedBox(height: 10),
 
             ElevatedButton(
