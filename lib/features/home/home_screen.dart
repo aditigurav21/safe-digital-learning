@@ -11,10 +11,10 @@ class HomeScreen extends StatelessWidget {
           children: [
             SizedBox(height: 20),
 
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/create-account'),
-              child: Text("Simulation 1 (Account Setup)"),
-            ),
+           ElevatedButton(
+  onPressed: () => Navigator.pushNamed(context, '/sim1-intro'),
+  child: Text("Simulation 1 (Gov Scheme)"),
+),
 
             SizedBox(height: 10),
 
