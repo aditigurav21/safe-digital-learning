@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
+import 'lesson_model.dart';
+import 'lesson_screen.dart';
+import '../../core/constants/colors.dart';
+import '../../core/constants/strings.dart';
 
+/// This screen is now a "preview" before the lesson.
+/// It shows level info and a "Start Lesson" button.
 class LevelIntroScreen extends StatelessWidget {
-  final int level;
-  LevelIntroScreen({required this.level});
-
-  static const _levelData = [
-    {'emoji': '🔐', 'title': 'Password Basics', 'desc': 'Learn the first rules of staying safe online. Can you spot the right moves?', 'color': 0xFF6C63FF},
-    {'emoji': '🕵️', 'title': 'Scam Spotter', 'desc': 'Phishing, fake links, suspicious messages — test your scam-detection skills.', 'color': 0xFF00B894},
-    {'emoji': '🛡️', 'title': 'Privacy Guard', 'desc': 'What should you share? What should you keep secret? Protect your identity.', 'color': 0xFFFF6B35},
-    {'emoji': '🌐', 'title': 'Safe Browsing', 'desc': 'Navigate the web without falling into traps. Stay one step ahead.', 'color': 0xFF0984E3},
-    {'emoji': '🏆', 'title': 'Master Challenge', 'desc': 'The final test. Prove you are a true digital safety guardian!', 'color': 0xFFFFD700},
-  ];
+  final LevelData levelData;
+  const LevelIntroScreen({required this.levelData});
 
   @override
   Widget build(BuildContext context) {
-    final data = level <= 5 ? _levelData[level - 1] : _levelData[0];
-    final color = Color(data['color'] as int);
+    final color = AppColors.levelColor(levelData.level);
+    final lightColor = AppColors.levelLight(levelData.level);
 
     return Scaffold(
-      backgroundColor: Color(0xFF0D1B2A),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -29,13 +27,14 @@ class LevelIntroScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () => Navigator.pop(context, false),
                 child: Container(
-                  width: 40,
-                  height: 40,
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
-                    color: Color(0xFF122335),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.cardBorder),
                   ),
-                  child: Icon(Icons.arrow_back_ios_new, color: Colors.white70, size: 18),
+                  child: const Icon(Icons.arrow_back_ios_new, size: 18, color: AppColors.textSecondary),
                 ),
               ),
 
@@ -43,35 +42,32 @@ class LevelIntroScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Big emoji
+                    // Emoji hero
                     Container(
                       width: 120,
                       height: 120,
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.15),
+                        color: lightColor,
                         shape: BoxShape.circle,
                         border: Border.all(color: color.withOpacity(0.3), width: 2),
-                        boxShadow: [
-                          BoxShadow(color: color.withOpacity(0.3), blurRadius: 30, spreadRadius: 5),
-                        ],
                       ),
                       child: Center(
-                        child: Text(data['emoji'] as String, style: TextStyle(fontSize: 52)),
+                        child: Text(levelData.emoji, style: const TextStyle(fontSize: 54)),
                       ),
                     ),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 28),
 
                     // Level badge
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.15),
+                        color: lightColor,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: color.withOpacity(0.4)),
                       ),
                       child: Text(
-                        'LEVEL $level',
+                        'LEVEL ${levelData.level}',
                         style: TextStyle(
                           color: color,
                           fontWeight: FontWeight.w800,
@@ -84,9 +80,9 @@ class LevelIntroScreen extends StatelessWidget {
                     const SizedBox(height: 16),
 
                     Text(
-                      data['title'] as String,
-                      style: TextStyle(
-                        color: Colors.white,
+                      levelData.title,
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
                         fontSize: 28,
                         fontWeight: FontWeight.w900,
                       ),
@@ -96,27 +92,35 @@ class LevelIntroScreen extends StatelessWidget {
                     const SizedBox(height: 12),
 
                     Text(
-                      data['desc'] as String,
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 15,
+                      levelData.description,
+                      style: const TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 16,
                         height: 1.5,
                       ),
                       textAlign: TextAlign.center,
                     ),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 32),
 
-                    // Stats row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _InfoChip(icon: '❓', label: '3 Questions'),
-                        const SizedBox(width: 12),
-                        _InfoChip(icon: '⚡', label: '100 XP'),
-                        const SizedBox(width: 12),
-                        _InfoChip(icon: '⏱️', label: '~2 min'),
-                      ],
+                    // Stats
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.cardBorder),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _InfoChip(icon: '📖', label: '${levelData.lessonPages.length} lessons'),
+                          Container(width: 1, height: 32, color: AppColors.cardBorder),
+                          _InfoChip(icon: '❓', label: '${levelData.questions.length} questions'),
+                          Container(width: 1, height: 32, color: AppColors.cardBorder),
+                          const _InfoChip(icon: '⚡', label: '100 XP'),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -125,30 +129,31 @@ class LevelIntroScreen extends StatelessWidget {
               // Start button
               SizedBox(
                 width: double.infinity,
-                height: 56,
+                height: 58,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context, true),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => LessonScreen(levelData: levelData),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: color,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    elevation: 0,
-                    shadowColor: color.withOpacity(0.5),
+                    elevation: 2,
+                    shadowColor: color.withOpacity(0.4),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Start Level $level',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800,
-                        ),
+                        'Start Lesson →',
+                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
                       ),
-                      const SizedBox(width: 8),
-                      Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
                     ],
                   ),
                 ),
@@ -156,15 +161,14 @@ class LevelIntroScreen extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // Skip / back
               SizedBox(
                 width: double.infinity,
                 height: 48,
                 child: TextButton(
                   onPressed: () => Navigator.pop(context, false),
-                  child: Text(
+                  child: const Text(
                     'Maybe later',
-                    style: TextStyle(color: Colors.white38, fontSize: 14),
+                    style: TextStyle(color: AppColors.textMuted, fontSize: 15),
                   ),
                 ),
               ),
@@ -182,21 +186,15 @@ class _InfoChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Color(0xFF122335),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Color(0xFF1E3A54)),
-      ),
-      child: Row(
-        children: [
-          Text(icon, style: TextStyle(fontSize: 14)),
-          SizedBox(width: 6),
-          Text(label,
-              style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600)),
-        ],
-      ),
+    return Column(
+      children: [
+        Text(icon, style: const TextStyle(fontSize: 22)),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13, fontWeight: FontWeight.w600),
+        ),
+      ],
     );
   }
 }

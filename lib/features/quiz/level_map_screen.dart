@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'quiz_screen.dart';
-import 'level_intro_screen.dart';
+import 'lesson_model.dart';
+import 'lesson_screen.dart';
 import 'progress_manager.dart';
+import '../../core/constants/colors.dart';
+import '../../core/constants/strings.dart';
 
 class LevelMapScreen extends StatefulWidget {
+  const LevelMapScreen({super.key});
+
   @override
-  _LevelMapScreenState createState() => _LevelMapScreenState();
+  State<LevelMapScreen> createState() => _LevelMapScreenState();
 }
 
 class _LevelMapScreenState extends State<LevelMapScreen> {
@@ -30,24 +34,29 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
   }
 
   void onLevelTap(int level) async {
-    if (level > unlockedLevel) return;
+    if (level > unlockedLevel) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('🔒 Complete the previous level first!'),
+          backgroundColor: AppColors.locked,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+      return;
+    }
 
-    final bool? startQuiz = await Navigator.push<bool>(
-      context,
-      MaterialPageRoute(builder: (_) => LevelIntroScreen(level: level)),
-    );
-    if (startQuiz != true) return;
+    final levelData = allLevels[level - 1];
 
+    // Navigate to Lesson first
     final bool? passed = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (_) => QuizScreen(level: level)),
+      MaterialPageRoute(builder: (_) => LessonScreen(levelData: levelData)),
     );
 
     if (passed == true) {
-      final newCurrent =
-          (level == currentLevel && currentLevel < 5) ? currentLevel + 1 : currentLevel;
-      final newUnlocked =
-          (unlockedLevel < 5 && newCurrent > unlockedLevel) ? newCurrent : unlockedLevel;
+      final newCurrent = (level == currentLevel && currentLevel < 5) ? currentLevel + 1 : currentLevel;
+      final newUnlocked = (unlockedLevel < 5 && newCurrent > unlockedLevel) ? newCurrent : unlockedLevel;
 
       setState(() {
         currentLevel = newCurrent;
@@ -56,60 +65,59 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
 
       await ProgressManager.saveProgress(newUnlocked, newCurrent);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('🎉 Level $level complete! Level $newCurrent unlocked!'),
-          backgroundColor: Color(0xFF00B894),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Keep trying — you\'ve got this! 💪'),
-          backgroundColor: Color(0xFFFF6B35),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppStrings.levelUnlocked(level)),
+            backgroundColor: AppColors.success,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    } else if (passed == false) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(AppStrings.keepGoing),
+            backgroundColor: AppColors.warning,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return Scaffold(
-        backgroundColor: Color(0xFF0D1B2A),
-        body: Center(child: CircularProgressIndicator(color: Color(0xFF6C63FF))),
+      return const Scaffold(
+        backgroundColor: AppColors.background,
+        body: Center(child: CircularProgressIndicator(color: AppColors.primary)),
       );
     }
 
     return Scaffold(
-      backgroundColor: Color(0xFF0D1B2A),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             _buildHeader(),
-            _buildXPBar(),
+            _buildProgressBar(),
             Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  height: 600,
-                  child: Stack(
-                    children: [
-                      CustomPaint(
-                        size: Size(double.infinity, 600),
-                        painter: LevelPathPainter(unlockedLevel: unlockedLevel),
-                      ),
-                      Positioned(bottom: 20, left: 60, child: _levelNode(1)),
-                      Positioned(bottom: 130, left: 60, child: _levelNode(2)),
-                      Positioned(bottom: 240, left: 200, child: _levelNode(3)),
-                      Positioned(bottom: 360, left: 120, child: _levelNode(4)),
-                      Positioned(bottom: 470, left: 200, child: _levelNode(5)),
-                    ],
-                  ),
-                ),
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                children: List.generate(allLevels.length, (i) {
+                  final level = i + 1;
+                  return _LevelCard(
+                    levelData: allLevels[i],
+                    unlocked: level <= unlockedLevel,
+                    completed: level < currentLevel,
+                    isCurrent: level == currentLevel && level <= unlockedLevel,
+                    onTap: () => onLevelTap(level),
+                  );
+                }),
               ),
             ),
           ],
@@ -119,49 +127,40 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
       child: Row(
         children: [
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
-              width: 40,
-              height: 40,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
-                color: Color(0xFF122335),
+                color: AppColors.background,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.cardBorder),
               ),
-              child: Icon(Icons.arrow_back_ios_new, color: Colors.white70, size: 18),
+              child: const Icon(Icons.arrow_back_ios_new, size: 18, color: AppColors.textSecondary),
             ),
           ),
-          const SizedBox(width: 16),
-          Text(
-            '🧠 Safety Quiz',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          Spacer(),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Color(0xFF1A3A5C),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
+          const SizedBox(width: 14),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('⭐', style: TextStyle(fontSize: 14)),
-                SizedBox(width: 4),
                 Text(
-                  '${(unlockedLevel - 1) * 3} / 15',
+                  '🛡️ SafeLearn',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 13,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary,
                   ),
+                ),
+                Text(
+                  'Choose a level to start',
+                  style: TextStyle(fontSize: 13, color: AppColors.textMuted),
                 ),
               ],
             ),
@@ -171,14 +170,15 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
     );
   }
 
-  Widget _buildXPBar() {
+  Widget _buildProgressBar() {
+    final done = (currentLevel - 1).clamp(0, 5);
     return Container(
-      margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFF122335),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Color(0xFF1E3A54)),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,99 +187,31 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Level ${unlockedLevel > 5 ? 5 : unlockedLevel} / 5 Unlocked',
-                style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
+                '$done / 5 ${AppStrings.levelsComplete}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               Text(
-                '${((unlockedLevel - 1) / 5 * 100).toInt()}% Complete',
-                style: TextStyle(color: Color(0xFF6C63FF), fontSize: 12, fontWeight: FontWeight.w700),
+                '${(done / 5 * 100).toInt()}% Complete',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
-              value: (unlockedLevel - 1) / 5,
-              minHeight: 8,
-              backgroundColor: Color(0xFF0D1B2A),
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _levelNode(int level) {
-    final bool unlocked = level <= unlockedLevel;
-    final bool completed = level < currentLevel;
-    final bool isCurrent = level == currentLevel && unlocked;
-
-    Color nodeColor;
-    Widget nodeChild;
-
-    if (completed) {
-      nodeColor = Color(0xFF00B894);
-      nodeChild = Icon(Icons.check_rounded, color: Colors.white, size: 28);
-    } else if (isCurrent) {
-      nodeColor = Color(0xFF6C63FF);
-      nodeChild = Text('$level',
-          style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.w900));
-    } else if (unlocked) {
-      nodeColor = Color(0xFF1A3A5C);
-      nodeChild = Text('$level',
-          style: TextStyle(fontSize: 22, color: Colors.white54, fontWeight: FontWeight.w700));
-    } else {
-      nodeColor = Color(0xFF0F2030);
-      nodeChild = Icon(Icons.lock_rounded, color: Colors.white24, size: 24);
-    }
-
-    return GestureDetector(
-      onTap: () => onLevelTap(level),
-      child: Column(
-        children: [
-          if (isCurrent)
-            Container(
-              margin: EdgeInsets.only(bottom: 6),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: Color(0xFF6C63FF),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text('START!',
-                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w800)),
-            ),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 400),
-            curve: Curves.easeOutBack,
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              color: nodeColor,
-              shape: BoxShape.circle,
-              border: isCurrent
-                  ? Border.all(color: Colors.white.withOpacity(0.4), width: 3)
-                  : completed
-                      ? Border.all(color: Color(0xFF00B894).withOpacity(0.5), width: 2)
-                      : null,
-              boxShadow: [
-                if (isCurrent)
-                  BoxShadow(color: Color(0xFF6C63FF).withOpacity(0.5), blurRadius: 20, spreadRadius: 4),
-                if (completed)
-                  BoxShadow(color: Color(0xFF00B894).withOpacity(0.3), blurRadius: 12, spreadRadius: 2),
-                BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 8, offset: Offset(0, 4)),
-              ],
-            ),
-            child: Center(child: nodeChild),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Lvl $level',
-            style: TextStyle(
-              color: unlocked ? Colors.white60 : Colors.white24,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+              value: done / 5,
+              minHeight: 12,
+              backgroundColor: AppColors.xpBarBg,
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.xpBar),
             ),
           ),
         ],
@@ -288,36 +220,192 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
   }
 }
 
-class LevelPathPainter extends CustomPainter {
-  final int unlockedLevel;
-  LevelPathPainter({required this.unlockedLevel});
+// ──────────────────────────────────────────────
+// Level Card — replaces the path/map UI
+// ──────────────────────────────────────────────
+class _LevelCard extends StatelessWidget {
+  final LevelData levelData;
+  final bool unlocked;
+  final bool completed;
+  final bool isCurrent;
+  final VoidCallback onTap;
+
+  const _LevelCard({
+    required this.levelData,
+    required this.unlocked,
+    required this.completed,
+    required this.isCurrent,
+    required this.onTap,
+  });
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final dimPaint = Paint()
-      ..color = Colors.white10
-      ..strokeWidth = 4
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
+  Widget build(BuildContext context) {
+    final color = AppColors.levelColor(levelData.level);
+    final lightColor = AppColors.levelLight(levelData.level);
 
-    final litPaint = Paint()
-      ..color = Color(0xFF6C63FF).withOpacity(0.6)
-      ..strokeWidth = 4
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.only(bottom: 14),
+        decoration: BoxDecoration(
+          color: unlocked ? Colors.white : AppColors.lockedLight,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isCurrent
+                ? color
+                : completed
+                    ? AppColors.success.withOpacity(0.4)
+                    : AppColors.cardBorder,
+            width: isCurrent ? 2.5 : 1.5,
+          ),
+          boxShadow: [
+            if (isCurrent)
+              BoxShadow(
+                color: color.withOpacity(0.2),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              )
+            else
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Row(
+            children: [
+              // Level icon circle
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  color: unlocked ? lightColor : AppColors.lockedLight,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: unlocked ? color.withOpacity(0.3) : AppColors.locked.withOpacity(0.2),
+                  ),
+                ),
+                child: Center(
+                  child: completed
+                      ? const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 32)
+                      : unlocked
+                          ? Text(levelData.emoji, style: const TextStyle(fontSize: 30))
+                          : const Icon(Icons.lock_rounded, color: AppColors.locked, size: 28),
+                ),
+              ),
 
-    var path = Path();
-    path.moveTo(95, size.height - 55);
-    path.quadraticBezierTo(95, size.height - 100, 95, size.height - 130);
-    path.quadraticBezierTo(140, size.height - 185, 235, size.height - 240);
-    path.quadraticBezierTo(175, size.height - 300, 155, size.height - 360);
-    path.quadraticBezierTo(175, size.height - 420, 235, size.height - 470);
+              const SizedBox(width: 16),
 
-    canvas.drawPath(path, dimPaint);
-    canvas.drawPath(path, litPaint);
+              // Title & description
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            '${AppStrings.levelPrefix} ${levelData.level}: ${levelData.title}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: unlocked ? AppColors.textPrimary : AppColors.locked,
+                            ),
+                          ),
+                        ),
+                        if (isCurrent) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: color,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Text(
+                              'START',
+                              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      levelData.subtitle,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: unlocked ? AppColors.textMuted : AppColors.locked,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Info chips
+                    Wrap(
+                      spacing: 8,
+                      children: [
+                        _InfoChip(icon: Icons.menu_book, label: '${levelData.lessonPages.length} pages', color: color, unlocked: unlocked),
+                        _InfoChip(icon: Icons.quiz, label: '${levelData.questions.length} questions', color: color, unlocked: unlocked),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              // Arrow
+              if (unlocked)
+                Icon(Icons.chevron_right_rounded, color: color, size: 28)
+              else
+                const Icon(Icons.chevron_right_rounded, color: AppColors.locked, size: 28),
+            ],
+          ),
+        ),
+      ),
+    );
   }
+}
+
+class _InfoChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final bool unlocked;
+
+  const _InfoChip({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.unlocked,
+  });
 
   @override
-  bool shouldRepaint(covariant LevelPathPainter oldDelegate) =>
-      oldDelegate.unlockedLevel != unlockedLevel;
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: unlocked ? color.withOpacity(0.1) : AppColors.lockedLight,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: unlocked ? color.withOpacity(0.3) : AppColors.cardBorder,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: unlocked ? color : AppColors.locked),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: unlocked ? color : AppColors.locked,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

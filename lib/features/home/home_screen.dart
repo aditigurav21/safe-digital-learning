@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../core/constants/colors.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1B2A),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -40,39 +41,24 @@ class HomeScreen extends StatelessWidget {
               Text(
                 'Guardian Path',
                 style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  letterSpacing: -0.5,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
                 ),
               ),
               Text(
                 'Stay safe. Stay smart. 🛡️',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white54,
-                  fontWeight: FontWeight.w500,
+                  color: AppColors.textSecondary,
                 ),
               ),
             ],
           ),
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFFF6B35), Color(0xFFFF8E53)],
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFFFF6B35).withOpacity(0.4),
-                  blurRadius: 12,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Icon(Icons.person, color: Colors.white, size: 24),
+          CircleAvatar(
+            radius: 24,
+            backgroundColor: AppColors.primaryLight,
+            child: Icon(Icons.person, color: Colors.white),
           ),
         ],
       ),
@@ -82,50 +68,30 @@ class HomeScreen extends StatelessWidget {
   Widget _buildStreakBanner() {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF1A3A5C), Color(0xFF0F2744)],
-        ),
+        color: AppColors.levelLight(1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Color(0xFF2A5A8C), width: 1),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Row(
         children: [
-          Text('🔥', style: TextStyle(fontSize: 28)),
+          Text('🔥', style: TextStyle(fontSize: 26)),
           const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '3 Day Streak!',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                'Keep it up — you\'re on fire!',
-                style: TextStyle(color: Colors.white54, fontSize: 12),
-              ),
-            ],
-          ),
-          Spacer(),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Color(0xFFFF6B35).withOpacity(0.15),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Color(0xFFFF6B35).withOpacity(0.4)),
-            ),
+          Expanded(
             child: Text(
-              '+10 XP',
+              '3 Day Streak! Keep going!',
               style: TextStyle(
-                color: Color(0xFFFF6B35),
+                color: AppColors.textPrimary,
                 fontWeight: FontWeight.w700,
-                fontSize: 13,
               ),
+            ),
+          ),
+          Text(
+            '+10 XP',
+            style: TextStyle(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],
@@ -139,10 +105,9 @@ class HomeScreen extends StatelessWidget {
       child: Text(
         title,
         style: TextStyle(
-          color: Colors.white,
+          color: AppColors.textPrimary,
           fontSize: 18,
           fontWeight: FontWeight.w800,
-          letterSpacing: -0.3,
         ),
       ),
     );
@@ -153,42 +118,28 @@ class HomeScreen extends StatelessWidget {
       _MissionData(
         icon: '🔐',
         title: 'Account Setup',
-        subtitle: 'Simulation 1',
-        description: 'Learn to create strong, secure accounts',
-        color1: Color(0xFF6C63FF),
-        color2: Color(0xFF9B59B6),
+        description: 'Create strong accounts',
+        color: AppColors.level1,
         route: '/create-account',
-        xp: '50 XP',
-        difficulty: 'Beginner',
       ),
       _MissionData(
         icon: '🕵️',
         title: 'Scam Detection',
-        subtitle: 'Simulation 2',
-        description: 'Spot and avoid online scams',
-        color1: Color(0xFF00B894),
-        color2: Color(0xFF00CEC9),
+        description: 'Avoid scams',
+        color: AppColors.level2,
         route: '/sim2-intro',
-        xp: '75 XP',
-        difficulty: 'Intermediate',
       ),
       _MissionData(
         icon: '🧠',
         title: 'Safety Quiz',
-        subtitle: 'Level Challenge',
-        description: 'Test your digital safety knowledge',
-        color1: Color(0xFFFF6B35),
-        color2: Color(0xFFFF8E53),
+        description: 'Test knowledge',
+        color: AppColors.level3,
         route: '/levels',
-        xp: '100 XP',
-        difficulty: 'All Levels',
       ),
     ];
 
     return Column(
-      children: missions
-          .map((m) => _MissionCard(mission: m))
-          .toList(),
+      children: missions.map((m) => _MissionCard(m)).toList(),
     );
   }
 
@@ -197,68 +148,40 @@ class HomeScreen extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF1A3A5C), Color(0xFF0F2744)],
-        ),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Color(0xFF2A5A8C), width: 1),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Overall Progress',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
-                ),
-              ),
-              GestureDetector(
-                onTap: () => Navigator.pushNamed(context, '/dashboard'),
-                child: Text(
-                  'View Dashboard →',
-                  style: TextStyle(
-                    color: Color(0xFF6C63FF),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              _StatChip(label: '3', sublabel: 'Lessons Done', icon: '✅'),
-              const SizedBox(width: 12),
-              _StatChip(label: '225', sublabel: 'Total XP', icon: '⚡'),
-              const SizedBox(width: 12),
-              _StatChip(label: '2', sublabel: 'Badges', icon: '🏅'),
-            ],
-          ),
-          const SizedBox(height: 16),
           Text(
-            'Daily Goal',
-            style: TextStyle(color: Colors.white60, fontSize: 12),
+            'Overall Progress',
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 16),
+
+          Row(
+            children: [
+              _StatChip('3', 'Lessons', '✅'),
+              _StatChip('225', 'XP', '⚡'),
+              _StatChip('2', 'Badges', '🏅'),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: 0.6,
               minHeight: 10,
-              backgroundColor: Color(0xFF0D1B2A),
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
+              backgroundColor: AppColors.xpBarBg,
+              valueColor: AlwaysStoppedAnimation(AppColors.primary),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '3 / 5 missions completed today',
-            style: TextStyle(color: Colors.white38, fontSize: 11),
           ),
         ],
       ),
@@ -267,137 +190,73 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _MissionData {
-  final String icon, title, subtitle, description, route, xp, difficulty;
-  final Color color1, color2;
-  const _MissionData({
+  final String icon, title, description, route;
+  final Color color;
+
+  _MissionData({
     required this.icon,
     required this.title,
-    required this.subtitle,
     required this.description,
-    required this.color1,
-    required this.color2,
+    required this.color,
     required this.route,
-    required this.xp,
-    required this.difficulty,
   });
 }
 
 class _MissionCard extends StatelessWidget {
-  final _MissionData mission;
-  const _MissionCard({required this.mission});
+  final _MissionData m;
+  const _MissionCard(this.m);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, mission.route),
+      onTap: () => Navigator.pushNamed(context, m.route),
       child: Container(
         margin: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Color(0xFF122335),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Color(0xFF1E3A54), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 10,
-              offset: Offset(0, 4),
-            ),
-          ],
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.cardBorder),
         ),
         child: Row(
           children: [
-            // Icon bubble
             Container(
-              width: 56,
-              height: 56,
+              width: 50,
+              height: 50,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [mission.color1, mission.color2],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: mission.color1.withOpacity(0.4),
-                    blurRadius: 10,
-                    offset: Offset(0, 4),
-                  ),
-                ],
+                color: m.color.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child: Text(mission.icon, style: TextStyle(fontSize: 26)),
+                child: Text(m.icon, style: TextStyle(fontSize: 22)),
               ),
             ),
-            const SizedBox(width: 16),
-            // Text
+            const SizedBox(width: 12),
+
+            // FIXED OVERFLOW HERE
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        mission.title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 15,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: mission.color1.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          mission.difficulty,
-                          style: TextStyle(
-                            color: mission.color1,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 3),
                   Text(
-                    mission.description,
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                    m.title,
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    m.description,
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 12),
-            // XP badge + arrow
-            Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: mission.color1.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                        color: mission.color1.withOpacity(0.3), width: 1),
-                  ),
-                  child: Text(
-                    mission.xp,
-                    style: TextStyle(
-                      color: mission.color1,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 11,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Icon(Icons.arrow_forward_ios,
-                    color: Colors.white24, size: 14),
-              ],
-            ),
+
+            Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.textMuted),
           ],
         ),
       ),
@@ -406,38 +265,18 @@ class _MissionCard extends StatelessWidget {
 }
 
 class _StatChip extends StatelessWidget {
-  final String label, sublabel, icon;
-  const _StatChip(
-      {required this.label, required this.sublabel, required this.icon});
+  final String value, label, icon;
+  const _StatChip(this.value, this.label, this.icon);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: Color(0xFF0D1B2A),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Text(icon, style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-                fontSize: 16,
-              ),
-            ),
-            Text(
-              sublabel,
-              style: TextStyle(color: Colors.white38, fontSize: 9),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+      child: Column(
+        children: [
+          Text(icon),
+          Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(label, style: TextStyle(fontSize: 10)),
+        ],
       ),
     );
   }
