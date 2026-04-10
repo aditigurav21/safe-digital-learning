@@ -229,8 +229,8 @@ class _JobCard extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: highlight
-                  ? Colors.orange.withOpacity(0.2)
-                  : Colors.black.withOpacity(0.05),
+                  ? Colors.orange.withValues(alpha:0.2)
+                  : Colors.black.withValues(alpha:0.05),
               blurRadius: highlight ? 10 : 4,
               offset: const Offset(0, 2),
             ),
@@ -246,7 +246,7 @@ class _JobCard extends StatelessWidget {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: logoColor.withOpacity(0.15),
+                    color: logoColor.withValues(alpha:0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
@@ -313,7 +313,7 @@ class _JobCard extends StatelessWidget {
                     margin: const EdgeInsets.only(right: 6),
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: tagColor.withOpacity(0.1),
+                      color: tagColor.withValues(alpha:0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(

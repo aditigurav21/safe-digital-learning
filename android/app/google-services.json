@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "168319474370",
+    "project_id": "authforlearningapp",
+    "storage_bucket": "authforlearningapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168319474370:android:0cd84304c9eff9b2de795b",
+        "android_client_info": {
+          "package_name": "com.example.safe_digital_learning"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ7DfQfhPh9nGl8xeV8khDN7qxkXMhcNk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

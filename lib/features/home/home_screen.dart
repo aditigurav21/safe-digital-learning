@@ -1,10 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
-
-// ✅ FIXED IMPORT (CHANGE PROJECT NAME IF USING package:)
 import '../../core/services/chatbot_screen.dart';
-// OR if relative works for you:
-// import '../chatbot/chatbot_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,22 +11,31 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
 
+      // ✅ MERGED APPBAR (TITLE + LOGOUT)
       appBar: AppBar(
         title: const Text("Guardian Path"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+            },
+          )
+        ],
       ),
 
-      // 🔥 ADD THIS (CHAT BUTTON)
-   floatingActionButton: FloatingActionButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ChatbotScreen(),
+      // ✅ CHATBOT BUTTON (KEPT)
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ChatbotScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.chat),
       ),
-    );
-  },
-  child: const Icon(Icons.chat),
-),
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -116,7 +122,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Text(
-            '+10 XP',
+            '+10 P',
             style: TextStyle(
               color: AppColors.primary,
               fontWeight: FontWeight.w700,
@@ -165,10 +171,10 @@ class HomeScreen extends StatelessWidget {
         route: '/sim3-intro',
       ),
       _MissionData(
-        icon: '🛡️',   
+        icon: '🛡️',
         title: 'Health Insurance Scam Simulation',
         description: 'Identify fake insurance',
-        color: Colors.teal,   
+        color: Colors.teal,
         route: '/sim4-intro',
       ),
       _MissionData(
@@ -208,7 +214,7 @@ class HomeScreen extends StatelessWidget {
           Row(
             children: const [
               _StatChip('3', 'Lessons', '✅'),
-              _StatChip('225', 'XP', '⚡'),
+              _StatChip('225', 'P', '⚡'),
               _StatChip('2', 'Badges', '🏅'),
             ],
           ),
@@ -261,9 +267,24 @@ class _MissionCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Text(m.icon),
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: m.color.withOpacity(0.2), // ✅ FIXED
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(m.icon, style: const TextStyle(fontSize: 22)),
+              ),
+            ),
             const SizedBox(width: 12),
-            Expanded(child: Text(m.title)),
+            Expanded(
+              child: Text(
+                m.title,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
             ElevatedButton(
               onPressed: () =>
                   Navigator.pushNamed(context, m.route),

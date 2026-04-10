@@ -116,7 +116,7 @@ class _CallScreenState extends State<CallScreen>
                           color: const Color(0xFF388BFD), width: 2.5),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF388BFD).withOpacity(0.35),
+                          color: const Color(0xFF388BFD).withValues(alpha:0.35),
                           blurRadius: 28,
                           spreadRadius: 6,
                         ),
@@ -151,7 +151,7 @@ class _CallScreenState extends State<CallScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: Colors.orange.shade900.withOpacity(0.5),
+                    color: Colors.orange.shade900.withValues(alpha:0.5),
                     borderRadius: BorderRadius.circular(10),
                     border:
                         Border.all(color: Colors.orange.shade700, width: 1),
@@ -244,7 +244,7 @@ class _CallScreenState extends State<CallScreen>
               color: color,
               boxShadow: [
                 BoxShadow(
-                    color: color.withOpacity(0.45),
+                    color: color.withValues(alpha:0.45),
                     blurRadius: 18,
                     spreadRadius: 2),
               ],
@@ -281,10 +281,10 @@ class _CallScreenState extends State<CallScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.15),
+                    color: Colors.green.withValues(alpha:0.15),
                     borderRadius: BorderRadius.circular(20),
                     border:
-                        Border.all(color: Colors.green.withOpacity(0.4)),
+                        Border.all(color: Colors.green.withValues(alpha:0.4)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -381,7 +381,7 @@ class _CallScreenState extends State<CallScreen>
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.red.shade900.withOpacity(0.4),
+                    color: Colors.red.shade900.withValues(alpha:0.4),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.red.shade700, width: 1),
                   ),

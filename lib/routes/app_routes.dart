@@ -55,8 +55,8 @@ import '../features/simulation1/quiz/sim1_result.dart';
 class AppRoutes {
   static Map<String, WidgetBuilder> routes = {
 
-    // Home
-    '/': (context) => HomeScreen(),
+    // Home no need added auth wrapper will handle it
+   // '/': (context) => HomeScreen(),
 
     // -------------------------
     // SIMULATION 1 (Gov Scheme)
