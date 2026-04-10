@@ -64,6 +64,10 @@ flutter:
   assets:
     - assets/audio/ringtone.mp3
     - assets/audio/scam_voice.mp3 
+    - assets/images/lonavla.jpg
+    - assets/images/draw.jpg
+    - assets/images/iphone.jpg
+    - assets/images/pav-bhaji.jpg #
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

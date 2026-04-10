@@ -26,8 +26,7 @@ class _InstagramFeedScreenState extends State<InstagramFeedScreen> {
       username: 'priya.sharma',
       avatarLetter: 'P',
       avatarColor: Color(0xFFE91E63),
-      imageColor: Color(0xFFFFCDD2),
-      imageIcon: Icons.photo_camera,
+      imagePath: 'assets/images/lonavla.jpg',
       caption: 'Beautiful morning at Lonavala! ☀️ #travel #Maharashtra',
       likes: 342,
       time: '2 hours ago',
@@ -38,8 +37,7 @@ class _InstagramFeedScreenState extends State<InstagramFeedScreen> {
       username: 'rahul.foodie',
       avatarLetter: 'R',
       avatarColor: Color(0xFF4CAF50),
-      imageColor: Color(0xFFC8E6C9),
-      imageIcon: Icons.restaurant,
+      imagePath: 'assets/images/pav-bhaji.jpg',
       caption: 'Homemade pav bhaji 😍 Recipe in bio! #food #Mumbai',
       likes: 891,
       time: '4 hours ago',
@@ -50,8 +48,7 @@ class _InstagramFeedScreenState extends State<InstagramFeedScreen> {
       username: 'flipkart_deals_99',
       avatarLetter: 'F',
       avatarColor: Color(0xFF2196F3),
-      imageColor: Color(0xFFBBDEFB),
-      imageIcon: Icons.shopping_bag,
+      imagePath: 'assets/images/iphone.jpg',
       caption:
       '🔥 MEGA SALE! iPhone 15 for ₹4,999 only! Limited stock! '
           'Click link in bio NOW! Offer expires in 1 hour! ⚡ #sale #deals',
@@ -64,8 +61,7 @@ class _InstagramFeedScreenState extends State<InstagramFeedScreen> {
       username: 'ananya.art',
       avatarLetter: 'A',
       avatarColor: Color(0xFF9C27B0),
-      imageColor: Color(0xFFE1BEE7),
-      imageIcon: Icons.palette,
+      imagePath: 'assets/images/draw.jpg',
       caption: 'My latest watercolour piece 🎨 #art #creative',
       likes: 567,
       time: '1 day ago',
@@ -242,52 +238,59 @@ class _InstagramFeedScreenState extends State<InstagramFeedScreen> {
           onTap: post.isScam ? () => _onScamAdTapped(context) : null,
           child: Stack(
             children: [
-              Container(
+              // 🔹 Real Image (background)
+              SizedBox(
                 width: double.infinity,
                 height: 300,
-                color: post.imageColor,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(post.imageIcon, size: 80, color: Colors.white70),
-                    if (post.isScam) ...[
-                      const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade600,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Text(
-                          '🔥 iPhone 15 @ ₹4,999\nOnly 3 left! TAP NOW',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ],
+                child: Image.asset(
+                  post.imagePath,
+                  fit: BoxFit.cover,
                 ),
               ),
+
+              // 🔴 SCAM OVERLAY (same as before)
+              if (post.isScam)
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade600,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      '🔥 iPhone 15 @ ₹4,999\nOnly 3 left! TAP NOW',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+
+              // 🟠 AD badge (top right)
               if (post.isScam)
                 Positioned(
                   top: 10,
                   right: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.orange.shade700,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text('AD',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold)),
+                    child: const Text(
+                      'AD',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
             ],
@@ -454,8 +457,8 @@ class _InstagramFeedScreenState extends State<InstagramFeedScreen> {
 
 class _FeedPost {
   final String username, avatarLetter, caption, time;
-  final Color avatarColor, imageColor;
-  final IconData imageIcon;
+  final Color avatarColor;
+  final String imagePath;
   final int likes;
   final bool isScam, isAd;
 
@@ -463,8 +466,7 @@ class _FeedPost {
     required this.username,
     required this.avatarLetter,
     required this.avatarColor,
-    required this.imageColor,
-    required this.imageIcon,
+    required this.imagePath,
     required this.caption,
     required this.likes,
     required this.time,
