@@ -1,28 +1,56 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ProgressManager {
-  static const _unlockedKey = 'unlocked_level';
-  static const _currentKey = 'current_level';
+  static const _scoresKey = 'level_scores';
 
-  static Future<int> getUnlockedLevel() async {
+  // Save score of a level
+  static Future<void> saveScore(int level, int score) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_unlockedKey) ?? 1;
+    final data = prefs.getString(_scoresKey);
+
+    Map<String, dynamic> scores = {};
+
+    if (data != null) {
+      scores = jsonDecode(data);
+    }
+
+    scores[level.toString()] = score;
+
+    await prefs.setString(_scoresKey, jsonEncode(scores));
   }
 
-  static Future<int> getCurrentLevel() async {
+  // Get score of one level
+  static Future<int?> getScore(int level) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_currentKey) ?? 1;
+    final data = prefs.getString(_scoresKey);
+
+    if (data == null) return null;
+
+    final scores = jsonDecode(data) as Map<String, dynamic>;
+return scores[level.toString()] as int?;
   }
 
-  static Future<void> saveProgress(int unlockedLevel, int currentLevel) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_unlockedKey, unlockedLevel);
-    await prefs.setInt(_currentKey, currentLevel);
-  }
+  // Get all scores
+  static Future<Map<int, int>> getAllScores() async {
+  final prefs = await SharedPreferences.getInstance();
+  final data = prefs.getString(_scoresKey);
 
+  if (data == null) return {};
+
+  final decoded = jsonDecode(data) as Map<String, dynamic>;
+
+  return decoded.map(
+    (key, value) => MapEntry(
+      int.parse(key),
+      value is int ? value : int.parse(value.toString()),
+    ),
+  );
+}
+
+  // Reset
   static Future<void> resetProgress() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_unlockedKey);
-    await prefs.remove(_currentKey);
+    await prefs.remove(_scoresKey);
   }
 }

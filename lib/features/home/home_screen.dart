@@ -27,10 +27,10 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 12),
               _buildProgressCard(context),
 
-              const SizedBox(height: 24),
-              _buildSectionTitle('⚡ Quick Actions'),
-              const SizedBox(height: 12),
-              _buildExtraButtons(context),
+              // const SizedBox(height: 24),
+              // _buildSectionTitle('⚡ Quick Actions'),
+              // const SizedBox(height: 12),
+              // _buildExtraButtons(context),
 
               const SizedBox(height: 32),
             ],
@@ -128,21 +128,21 @@ class HomeScreen extends StatelessWidget {
     final missions = [
       _MissionData(
         icon: '🔐',
-        title: 'Account Setup',
+        title: 'Gov Scheme Scam Simulation',
         description: 'Create strong accounts',
         color: AppColors.level1,
-        route: '/create-account',
+        route: '/sim1-intro',
       ),
       _MissionData(
         icon: '🕵️',
-        title: 'Scam Detection',
+        title: 'Social Media Scam Simulation',
         description: 'Avoid scams',
         color: AppColors.level2,
         route: '/sim2-intro',
       ),
       _MissionData(
         icon: '💼',
-        title: 'Job Scam',
+        title: 'Job Scam Simulation',
         description: 'Identify fake jobs',
         color: AppColors.level4,
         route: '/sim3-intro',
@@ -204,39 +204,39 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ✅ All buttons from other branch preserved here
-  Widget _buildExtraButtons(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/create-account'),
-            child: const Text("Simulation 1 (Account Setup)"),
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/sim2-intro'),
-            child: const Text("Simulation 2 (Scam Detection)"),
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/sim3-intro'),
-            child: const Text("Simulation 3 (Job Scam)"),
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/quiz'),
-            child: const Text("Quiz"),
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/dashboard'),
-            child: const Text("Dashboard"),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildExtraButtons(BuildContext context) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 20),
+  //     child: Column(
+  //       children: [
+  //         ElevatedButton(
+  //           onPressed: () => Navigator.pushNamed(context, '/create-account'),
+  //           child: const Text("Simulation 1 (Account Setup)"),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         ElevatedButton(
+  //           onPressed: () => Navigator.pushNamed(context, '/sim2-intro'),
+  //           child: const Text("Simulation 2 (Scam Detection)"),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         ElevatedButton(
+  //           onPressed: () => Navigator.pushNamed(context, '/sim3-intro'),
+  //           child: const Text("Simulation 3 (Job Scam)"),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         ElevatedButton(
+  //           onPressed: () => Navigator.pushNamed(context, '/quiz'),
+  //           child: const Text("Quiz"),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         ElevatedButton(
+  //           onPressed: () => Navigator.pushNamed(context, '/dashboard'),
+  //           child: const Text("Dashboard"),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
 
 class _MissionData {

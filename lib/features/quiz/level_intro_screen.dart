@@ -132,12 +132,12 @@ class LevelIntroScreen extends StatelessWidget {
                 height: 58,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => LessonScreen(levelData: levelData),
-                      ),
-                    );
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => LessonScreen(levelData: levelData),
+                    ),
+                  );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: color,
