@@ -105,7 +105,7 @@
 //       child: Container(
 //         padding: const EdgeInsets.all(18),
 //         decoration: BoxDecoration(
-//           color: color.withOpacity(0.08),
+//           color: color.withValues(alpha:0.08),
 //           borderRadius: BorderRadius.circular(16),
 //           border: Border.all(color: color),
 //         ),
@@ -259,7 +259,7 @@
 //         margin: const EdgeInsets.only(bottom: 12),
 //         padding: const EdgeInsets.all(14),
 //         decoration: BoxDecoration(
-//           color: warned ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.08),
+//           color: warned ? Colors.green.withValues(alpha:0.1) : Colors.red.withValues(alpha:0.08),
 //           borderRadius: BorderRadius.circular(12),
 //           border: Border.all(color: warned ? safe : danger),
 //         ),
@@ -501,8 +501,8 @@
 //         padding: const EdgeInsets.all(12),
 //         decoration: BoxDecoration(
 //           color: warned
-//               ? Colors.green.withOpacity(0.1)
-//               : Colors.red.withOpacity(0.08),
+//               ? Colors.green.withValues(alpha:0.1)
+//               : Colors.red.withValues(alpha:0.08),
 //           borderRadius: BorderRadius.circular(10),
 //           border: Border.all(
 //             color: warned ? safe : danger,

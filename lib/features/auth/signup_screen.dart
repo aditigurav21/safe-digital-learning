@@ -62,12 +62,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       });
 
       // Step 3: Navigate immediately — don't wait for Firestore
+      // Step 3: Auth state change handles navigation automatically
       if (mounted) {
         setState(() => _loading = false);
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-              (route) => false,
-        );
       }
     } catch (e) {
       if (mounted) {

@@ -1,6 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_digital_learning/l10n/app_localizations.dart';
+
+
+
 import '../../../providers/tts_provider.dart';
 import '../../../widgets/tts_toggle_button.dart';
 
@@ -15,36 +18,36 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
   late int score;
   late String message;
   late String badge;
-  bool _spoken = false;   // ← prevents double-speak on rebuild
+  bool _spoken = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     score = ModalRoute.of(context)?.settings.arguments as int? ?? 0;
-    _computeResult();
+    _computeResult(AppLocalizations.of(context)!);
     if (!_spoken) {
       _spoken = true;
       WidgetsBinding.instance.addPostFrameCallback((_) => _speakScreen());
     }
   }
 
-  void _computeResult() {
+  void _computeResult(AppLocalizations l) {
     const total = 5;
     if (score == total) {
-      message = "Outstanding! You are a Scam Expert!";
-      badge = "Gold Shield";
+      message = l.sim1_result_msg_perfect;
+      badge = l.sim1_result_badge_gold;
     } else if (score >= 4) {
-      message = "Excellent! You are very aware of scams.";
-      badge = "Scam Aware";
+      message = l.sim1_result_msg_great;
+      badge = l.sim1_result_badge_aware;
     } else if (score >= 3) {
-      message = "Good! A little more practice and you will be a pro.";
-      badge = "Learning";
+      message = l.sim1_result_msg_good;
+      badge = l.sim1_result_badge_learning;
     } else if (score >= 2) {
-      message = "Keep going! Scammers are tricky — practice more.";
-      badge = "Needs Practice";
+      message = l.sim1_result_msg_keepGoing;
+      badge = l.sim1_result_badge_practice;
     } else {
-      message = "Do not worry — now you know the tricks. Try again!";
-      badge = "Try Again";
+      message = l.sim1_result_msg_tryAgain;
+      badge = l.sim1_result_badge_retry;
     }
   }
 
@@ -52,19 +55,17 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
     if (!mounted) return;
     final tts = context.read<TtsProvider>();
     if (!tts.enabled) return;
+    final l = AppLocalizations.of(context)!;
     tts.speak(
-      "Quiz complete. Your score is $score out of 5. "
-      "$message "
-      "Badge: $badge. "
-      "Remember these 3 rules. "
-      "One: Never share OTP with anyone. "
-      "Two: Only use dot gov dot in websites. "
-      "Three: Call 1930 if something feels wrong. "
-      "Tap Go Home or Retry Quiz.",
+      "Quiz complete. ${l.sim1_result_score(score, 5)}. "
+          "$message "
+          "Badge: $badge. "
+          "${l.sim1_result_rules} "
+          "${l.sim1_result_rule1}. ${l.sim1_result_rule2}. ${l.sim1_result_rule3}. "
+          "${l.sim1_result_homeBtn} or ${l.sim1_result_retryBtn}.",
     );
   }
 
-  // ← KEY FIX: stop BEFORE navigating, not in dispose
   void _stopAndNavigate(VoidCallback navigate) {
     context.read<TtsProvider>().stop();
     navigate();
@@ -72,17 +73,15 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
 
   @override
   void dispose() {
-    // stop only if still mounted — safety net
-    if (mounted) {
-      context.read<TtsProvider>().stop();
-    }
+    if (mounted) context.read<TtsProvider>().stop();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     score = ModalRoute.of(context)?.settings.arguments as int? ?? 0;
-    _computeResult();
+    _computeResult(l);
 
     const total = 5;
     Color color;
@@ -90,24 +89,19 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
     List<String> symbols;
 
     if (score == total) {
-      color = Colors.green;
-      emoji = "🏆";
+      color = Colors.green; emoji = "🏆";
       symbols = ["🥇", "🛡️", "⭐", "⭐", "⭐"];
     } else if (score >= 4) {
-      color = Colors.green;
-      emoji = "🎉";
+      color = Colors.green; emoji = "🎉";
       symbols = ["🥈", "🛡️", "⭐", "⭐", "☆"];
     } else if (score >= 3) {
-      color = Colors.orange;
-      emoji = "👍";
+      color = Colors.orange; emoji = "👍";
       symbols = ["🥉", "🔰", "⭐", "☆", "☆"];
     } else if (score >= 2) {
-      color = Colors.orange;
-      emoji = "⚠️";
+      color = Colors.orange; emoji = "⚠️";
       symbols = ["📚", "🔰", "⭐", "☆", "☆"];
     } else {
-      color = Colors.red;
-      emoji = "💪";
+      color = Colors.red; emoji = "💪";
       symbols = ["📚", "🔴", "☆", "☆", "☆"];
     }
 
@@ -115,8 +109,7 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue.shade800,
         foregroundColor: Colors.white,
-        title: const Text("Quiz Result"),
-        // stop TTS when user taps back arrow too
+        title: Text(l.sim1_result_appBarTitle),
         leading: BackButton(
           onPressed: () => _stopAndNavigate(() => Navigator.pop(context)),
         ),
@@ -130,7 +123,7 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
             Text(emoji, style: const TextStyle(fontSize: 72)),
             const SizedBox(height: 16),
             Text(
-              "Your Score: $score / $total",
+              l.sim1_result_score(score, total),
               style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
@@ -144,32 +137,24 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: color.withValues(alpha:0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: color.withValues(alpha:0.4)),
+                border: Border.all(color: color.withValues(alpha: 0.4)),
               ),
               child: Column(
                 children: [
                   Text(
                     message,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                        height: 1.5),
+                    style: TextStyle(fontSize: 18, color: color, fontWeight: FontWeight.bold, height: 1.5),
                   ),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                        color: color, borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
                     child: Text(
                       "🏅 $badge",
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                   ),
                 ],
@@ -186,7 +171,7 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            Text("$score out of $total correct",
+            Text(l.sim1_result_scoreLabel(score, total),
                 style: const TextStyle(fontSize: 14, color: Colors.grey)),
             const SizedBox(height: 28),
             Container(
@@ -196,38 +181,32 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.blue.shade200),
               ),
-              child: const Column(
+              child: Column(
                 children: [
-                  Text("Remember these 3 rules:",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 10),
-                  Text("1. 🔒  NEVER share OTP with anyone",
-                      style: TextStyle(fontSize: 15, height: 1.8)),
-                  Text("2. 🌐  Only use .gov.in websites",
-                      style: TextStyle(fontSize: 15, height: 1.8)),
-                  Text("3. 📞  Call 1930 if something feels wrong",
-                      style: TextStyle(fontSize: 15, height: 1.8)),
+                  Text(l.sim1_result_rules,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  Text(l.sim1_result_rule1, style: const TextStyle(fontSize: 15, height: 1.8)),
+                  Text(l.sim1_result_rule2, style: const TextStyle(fontSize: 15, height: 1.8)),
+                  Text(l.sim1_result_rule3, style: const TextStyle(fontSize: 15, height: 1.8)),
                 ],
               ),
             ),
             const SizedBox(height: 28),
-
-            // ← _stopAndNavigate wraps every navigation button
             SizedBox(
               width: double.infinity,
               height: 54,
               child: ElevatedButton.icon(
                 onPressed: () => _stopAndNavigate(
-                  () => Navigator.popUntil(context, ModalRoute.withName('/')),
+                      () => Navigator.popUntil(context, ModalRoute.withName('/')),
                 ),
                 icon: const Icon(Icons.home, size: 24),
-                label: const Text("Go Home",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                label: Text(l.sim1_result_homeBtn,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade700,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ),
@@ -237,14 +216,13 @@ class _Sim1ResultScreenState extends State<Sim1ResultScreen> {
               height: 48,
               child: OutlinedButton.icon(
                 onPressed: () => _stopAndNavigate(
-                  () => Navigator.pushNamedAndRemoveUntil(
+                      () => Navigator.pushNamedAndRemoveUntil(
                       context, '/sim1-quiz', ModalRoute.withName('/')),
                 ),
                 icon: const Icon(Icons.refresh),
-                label: const Text("Retry Quiz", style: TextStyle(fontSize: 16)),
+                label: Text(l.sim1_result_retryBtn, style: const TextStyle(fontSize: 16)),
                 style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ),

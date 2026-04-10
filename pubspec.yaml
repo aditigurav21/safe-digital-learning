@@ -30,8 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
-  shared_preferences: ^2.2.2
+  intl: ^0.20.2
+  shared_preferences: ^2.3.0
   flutter_tts: ^4.0.2
   provider: ^6.1.2
   audioplayers: ^5.2.1
@@ -64,6 +67,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/audio/ringtone.mp3
