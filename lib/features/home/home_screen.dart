@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
 
+// ✅ FIXED IMPORT (CHANGE PROJECT NAME IF USING package:)
+import '../../core/services/chatbot_screen.dart';
+// OR if relative works for you:
+// import '../chatbot/chatbot_screen.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -8,7 +13,24 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text("Guardian Path")),
+
+      appBar: AppBar(
+        title: const Text("Guardian Path"),
+      ),
+
+      // 🔥 ADD THIS (CHAT BUTTON)
+   floatingActionButton: FloatingActionButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChatbotScreen(),
+      ),
+    );
+  },
+  child: const Icon(Icons.chat),
+),
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -26,11 +48,6 @@ class HomeScreen extends StatelessWidget {
               _buildSectionTitle('📊 Your Progress'),
               const SizedBox(height: 12),
               _buildProgressCard(context),
-
-              // const SizedBox(height: 24),
-              // _buildSectionTitle('⚡ Quick Actions'),
-              // const SizedBox(height: 12),
-              // _buildExtraButtons(context),
 
               const SizedBox(height: 32),
             ],
@@ -202,42 +219,9 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ✅ All buttons from other branch preserved here
-  // Widget _buildExtraButtons(BuildContext context) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 20),
-  //     child: Column(
-  //       children: [
-  //         ElevatedButton(
-  //           onPressed: () => Navigator.pushNamed(context, '/create-account'),
-  //           child: const Text("Simulation 1 (Account Setup)"),
-  //         ),
-  //         const SizedBox(height: 10),
-  //         ElevatedButton(
-  //           onPressed: () => Navigator.pushNamed(context, '/sim2-intro'),
-  //           child: const Text("Simulation 2 (Scam Detection)"),
-  //         ),
-  //         const SizedBox(height: 10),
-  //         ElevatedButton(
-  //           onPressed: () => Navigator.pushNamed(context, '/sim3-intro'),
-  //           child: const Text("Simulation 3 (Job Scam)"),
-  //         ),
-  //         const SizedBox(height: 10),
-  //         ElevatedButton(
-  //           onPressed: () => Navigator.pushNamed(context, '/quiz'),
-  //           child: const Text("Quiz"),
-  //         ),
-  //         const SizedBox(height: 10),
-  //         ElevatedButton(
-  //           onPressed: () => Navigator.pushNamed(context, '/dashboard'),
-  //           child: const Text("Dashboard"),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }
+
+// ---------- SUPPORT CLASSES ----------
 
 class _MissionData {
   final String icon, title, description, route;
@@ -270,49 +254,14 @@ class _MissionCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: m.color.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(m.icon, style: const TextStyle(fontSize: 22)),
-              ),
-            ),
+            Text(m.icon),
             const SizedBox(width: 12),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    m.title,
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    m.description,
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
+            Expanded(child: Text(m.title)),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, m.route),
+              onPressed: () =>
+                  Navigator.pushNamed(context, m.route),
               child: const Text("Start"),
             ),
-
-            const SizedBox(width: 8),
-            Icon(Icons.arrow_forward_ios,
-                size: 14, color: AppColors.textMuted),
           ],
         ),
       ),
