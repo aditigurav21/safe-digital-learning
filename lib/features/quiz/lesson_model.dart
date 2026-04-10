@@ -256,9 +256,107 @@ const List<LevelData> allLevels = [
     ],
   ),
 
-  // ─── LEVEL 3: Fraudulent Websites ────────────
+  // ─── NEW LEVEL 3: Insurance Scams ────────────
+LevelData(
+  level: 3,
+  emoji: '🛡️',
+  title: 'Insurance Scams',
+  subtitle: 'Fake policies & claim fraud',
+  description: 'Learn how fraudsters trick people using fake insurance calls, policies, and claims.',
+  lessonPages: [
+    LessonPage(
+      emoji: '🧾',
+      heading: 'What is Insurance?',
+      body:
+          'Insurance protects you from financial loss. You pay a premium, and the company helps you during emergencies like accidents, health issues, or damage.\n\nBut scammers misuse this concept to trick people.',
+      tip: '✅ Always buy insurance from official company websites or agents.',
+    ),
+    LessonPage(
+      emoji: '📞',
+      heading: 'Fake Insurance Calls',
+      body:
+          'Fraudsters call pretending to be from LIC, SBI Life, or other insurance companies.\n\nThey say:\n• "Your old policy has matured — pay fee to receive money"\n• "Update your policy KYC now"\n• "You will get bonus if you invest now"\n\nThese are scams.',
+      tip: '⚠️ Real insurance companies NEVER ask for payment to release maturity money.',
+    ),
+    LessonPage(
+      emoji: '💰',
+      heading: 'Fake Policy & Bonus Scam',
+      body:
+          'Scammers offer fake insurance policies with high returns.\n\nThey promise:\n• Double money in short time\n• Huge bonus on policy\n• Special scheme only for you\n\nAfter payment, they disappear.',
+      tip: '🚫 Insurance is NOT for quick profit. High return = high risk scam.',
+    ),
+    LessonPage(
+      emoji: '🛑',
+      heading: 'How to Stay Safe',
+      body:
+          'To stay safe:\n\n1. Do not trust unknown calls\n2. Verify policy on official website\n3. Never share PAN, Aadhaar, or bank details\n4. Call company helpline yourself\n5. Report fraud to 1930',
+      tip: '📞 Always verify before paying any insurance-related amount.',
+    ),
+  ],
+  questions: [
+    QuizQuestion(
+      senderLabel: 'Phone call — "LIC Agent"',
+      scenario:
+          '"Your LIC policy has matured. You will receive ₹2 lakh. To release it, pay ₹5,000 processing fee now."',
+      answer: QuizAnswer.phishing,
+      explanation:
+          'This is a scam. Insurance companies never ask for fees to release maturity money. The caller is trying to steal your money.',
+      redFlags: [
+        'Asking for payment to release money',
+        'Urgency to pay immediately',
+        'Unverified caller',
+      ],
+    ),
+    QuizQuestion(
+      senderLabel: 'SMS from unknown number',
+      scenario:
+          '"Special insurance scheme! Invest ₹10,000 and get ₹50,000 in 30 days. Call now!"',
+      answer: QuizAnswer.phishing,
+      explanation:
+          'This is fake. Insurance does not give quick returns. This is a trap to steal your money.',
+      redFlags: [
+        'Unrealistic returns',
+        'Unknown sender',
+        'Too good to be true',
+      ],
+    ),
+    QuizQuestion(
+      senderLabel: 'Official email from LIC',
+      scenario:
+          '"Your LIC premium of ₹2,000 is due. Please pay via official website licindia.in"',
+      answer: QuizAnswer.safe,
+      explanation:
+          'This is normal. It asks you to pay through official LIC website and does not request sensitive data.',
+      redFlags: [],
+    ),
+    QuizQuestion(
+      senderLabel: 'Phone call — unknown number',
+      scenario:
+          '"Your insurance KYC is pending. Share your Aadhaar and bank details to update now."',
+      answer: QuizAnswer.phishing,
+      explanation:
+          'This is a scam. No company asks for full Aadhaar and bank details over phone.',
+      redFlags: [
+        'Asking sensitive information',
+        'Unknown caller',
+        'KYC pressure tactic',
+      ],
+    ),
+    QuizQuestion(
+      senderLabel: 'Insurance agent visit',
+      scenario:
+          'An agent visits your home, shows ID card, explains policy, and asks you to verify details on official app before payment.',
+      answer: QuizAnswer.safe,
+      explanation:
+          'This is safe because the agent is verified and asks you to confirm through official channels.',
+      redFlags: [],
+    ),
+  ],
+),
+
+  // ─── LEVEL 4: Fraudulent Websites ────────────
   LevelData(
-    level: 3,
+    level: 4,
     emoji: '🌐',
     title: 'Spotting Fake Websites',
     subtitle: 'Is this website real or fake?',
@@ -355,9 +453,9 @@ const List<LevelData> allLevels = [
     ],
   ),
 
-  // ─── LEVEL 4: Spam Calls & AI Voice Cloning ──
+  // ─── LEVEL 5: Spam Calls & AI Voice Cloning ──
   LevelData(
-    level: 4,
+    level: 5,
     emoji: '📞',
     title: 'Spam Calls & Fake Voices',
     subtitle: 'AI voice cloning and call fraud',
@@ -460,9 +558,9 @@ const List<LevelData> allLevels = [
     ],
   ),
 
-  // ─── LEVEL 5: Deepfakes & Advanced Scams ─────
+  // ─── LEVEL 6: Deepfakes & Advanced Scams ─────
   LevelData(
-    level: 5,
+    level: 6,
     emoji: '🏆',
     title: 'Deepfakes & Advanced Scams',
     subtitle: 'The master challenge',

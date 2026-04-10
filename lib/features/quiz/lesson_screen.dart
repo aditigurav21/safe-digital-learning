@@ -57,17 +57,21 @@ class _LessonScreenState extends State<LessonScreen>
     _slideCtrl.forward();
   }
 
-  void _goToQuiz() {
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) => QuizScreen(levelData: widget.levelData),
-        transitionsBuilder: (_, anim, __, child) =>
-            FadeTransition(opacity: anim, child: child),
-        transitionDuration: const Duration(milliseconds: 350),
-      ),
-    );
+  void _goToQuiz() async {
+  final int? score = await Navigator.push<int>(
+    context,
+    PageRouteBuilder(
+      pageBuilder: (_, __, ___) => QuizScreen(levelData: widget.levelData),
+      transitionsBuilder: (_, anim, __, child) =>
+          FadeTransition(opacity: anim, child: child),
+      transitionDuration: const Duration(milliseconds: 350),
+    ),
+  );
+
+  if (score != null) {
+    Navigator.pop(context, score); // 🔥 RETURN SCORE BACK
   }
+}
 
   @override
   Widget build(BuildContext context) {

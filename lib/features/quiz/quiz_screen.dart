@@ -71,20 +71,24 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     _cardCtrl.forward();
   }
 
-  void _finish() {
-    final passed = _score >= (questions.length / 2).ceil();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ResultScreen(
-          score: _score,
-          total: questions.length,
-          levelData: widget.levelData,
-          passed: passed,
-        ),
+  void _finish() async {
+  final passed = _score >= (questions.length / 2).ceil();
+
+  final result = await Navigator.push<int>(
+    context,
+    MaterialPageRoute(
+      builder: (_) => ResultScreen(
+        score: _score,
+        total: questions.length,
+        levelData: widget.levelData,
+        passed: passed,
       ),
-    );
-  }
+    ),
+  );
+
+  // return score back to LessonScreen → LevelMap
+  Navigator.pop(context, result ?? _score);
+}
 
   @override
   Widget build(BuildContext context) {
