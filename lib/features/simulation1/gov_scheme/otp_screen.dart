@@ -1,115 +1,4 @@
-/*import 'package:flutter/material.dart';
 
-class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
-
-  @override
-  State<OtpScreen> createState() => _OtpScreenState();
-}
-
-class _OtpScreenState extends State<OtpScreen> {
-  final TextEditingController otpController = TextEditingController();
-
-  void showScamPopup() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("⚠ Urgent Message"),
-        content: const Text(
-          "Dear user,\n\n"
-          "To receive your subsidy immediately, please share your OTP.\n\n"
-          "This is required for verification.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // ❌ Wrong choice
-              Navigator.pushNamed(context, '/sim1-link', arguments: false);
-            },
-            child: const Text("Share OTP ❌"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // ✅ Correct choice
-              Navigator.pushNamed(context, '/sim1-link', arguments: true);
-            },
-            child: const Text("Do NOT share OTP ✅"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // 🔥 Show scam popup automatically after screen loads
-    Future.delayed(const Duration(seconds: 2), () {
-      showScamPopup();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("OTP Verification")),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const Text(
-              "Enter OTP sent to your mobile",
-              style: TextStyle(fontSize: 18),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: otpController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: "Enter OTP",
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            ElevatedButton(
-              onPressed: () {
-                // Even if user enters OTP → show warning
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text("⚠ Warning"),
-                    content: const Text(
-                      "Never share OTP with anyone.\n\n"
-                      "Banks and government never ask for OTP.",
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(context, '/sim1-link',
-                              arguments: false);
-                        },
-                        child: const Text("Understood"),
-                      )
-                    ],
-                  ),
-                );
-              },
-              child: const Text("Submit OTP"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}*/
 import 'package:flutter/material.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -131,9 +20,9 @@ class _OtpScreenState extends State<OtpScreen> {
         backgroundColor: Colors.red.shade50,
         title: const Row(
           children: [
-            Icon(Icons.phone_in_talk, color: Colors.red, size: 30),
+            Icon(Icons.message, color: Colors.red, size: 30),
             SizedBox(width: 10),
-            Text("Incoming Call!", style: TextStyle(fontSize: 20, color: Colors.red)),
+            Text("Incoming Message!", style: TextStyle(fontSize: 20, color: Colors.red)),
           ],
         ),
         content: const Column(
@@ -141,7 +30,7 @@ class _OtpScreenState extends State<OtpScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "\"Namaste ji, I am calling from PM Kisan Office.\n\n"
+              "\"Namaste ji, I am messaging from PM Kisan Office.\n\n"
               "Your ₹6000 payment is ready. Please share the OTP you just received to confirm your identity.\"",
               style: TextStyle(fontSize: 16, height: 1.7, fontStyle: FontStyle.italic),
             ),
@@ -169,7 +58,7 @@ class _OtpScreenState extends State<OtpScreen> {
               _showSafeChoice();
             },
             icon: const Icon(Icons.block),
-            label: const Text("Refuse & Hang Up", style: TextStyle(fontSize: 15)),
+            label: const Text("Refuse & Block", style: TextStyle(fontSize: 15)),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
           ),
         ],
@@ -192,9 +81,9 @@ class _OtpScreenState extends State<OtpScreen> {
         ),
         content: const Text(
           "You are RIGHT to refuse!\n\n"
-          "No government officer EVER asks for OTP on phone.\n\n"
+          "No government officer EVER asks for OTP on phone or message.\n\n"
           "Real PM Kisan payments happen automatically — no OTP needed.\n\n"
-          "If someone asks for OTP, it is ALWAYS a scam. Hang up and call 1930.",
+          "If someone asks for OTP, it is ALWAYS a scam. Block and call 1930.",
           style: TextStyle(fontSize: 15, height: 1.7),
         ),
         actions: [
@@ -228,7 +117,7 @@ class _OtpScreenState extends State<OtpScreen> {
         foregroundColor: Colors.white,
         title: const Text("OTP Verification"),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
@@ -324,6 +213,8 @@ class _OtpScreenState extends State<OtpScreen> {
                 child: const Text("Submit OTP", style: TextStyle(fontSize: 18)),
               ),
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),

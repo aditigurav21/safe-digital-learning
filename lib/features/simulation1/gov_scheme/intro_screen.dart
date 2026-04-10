@@ -176,7 +176,7 @@ class IntroScreen extends StatelessWidget {
               width: double.infinity,
               height: 58,
               child: ElevatedButton.icon(
-                onPressed: () => Navigator.pushNamed(context, '/sim1-examples'),
+                onPressed: () => Navigator.pushNamed(context, '/sim1-form'),
                 icon: const Icon(Icons.play_circle_fill, size: 26),
                 label: const Text("Start Learning", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
