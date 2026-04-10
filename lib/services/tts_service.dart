@@ -1,0 +1,37 @@
+import 'package:flutter_tts/flutter_tts.dart';
+
+class TtsService {
+  static final TtsService _instance = TtsService._internal();
+  factory TtsService() => _instance;
+  TtsService._internal();
+
+  final FlutterTts _tts = FlutterTts();
+  bool _isInitialized = false;
+
+  Future<void> init() async {
+    if (_isInitialized) return;
+    await _tts.setLanguage("hi-IN");     // Hindi for rural/elderly users
+    await _tts.setSpeechRate(0.45);      // slow — important for elderly
+    await _tts.setVolume(1.0);
+    await _tts.setPitch(1.0);
+    _isInitialized = true;
+  }
+
+  Future<void> speak(String text) async {
+    await _tts.stop();
+    await _tts.speak(text);
+  }
+
+  Future<void> stop() async {
+    await _tts.stop();
+  }
+
+  Future<void> setLanguage(String lang) async {
+    await _tts.setLanguage(lang);
+  }
+
+  // Call this in every screen's dispose()
+  void disposeScreen() {
+    _tts.stop();
+  }
+}
