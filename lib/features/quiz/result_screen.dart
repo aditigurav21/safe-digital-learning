@@ -29,7 +29,8 @@ class _ResultScreenState extends State<ResultScreen>
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 700));
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 700));
     _scaleAnim = CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut);
     _fadeAnim = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
     _ctrl.forward();
@@ -55,7 +56,6 @@ class _ResultScreenState extends State<ResultScreen>
             children: [
               const SizedBox(height: 20),
 
-              // Trophy / retry emoji
               ScaleTransition(
                 scale: _scaleAnim,
                 child: Container(
@@ -68,8 +68,8 @@ class _ResultScreenState extends State<ResultScreen>
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: widget.passed
-                          ? AppColors.success.withOpacity(0.4)
-                          : AppColors.warning.withOpacity(0.4),
+                          ? AppColors.success.withValues(alpha: 0.4)
+                          : AppColors.warning.withValues(alpha: 0.4),
                       width: 3,
                     ),
                   ),
@@ -89,7 +89,9 @@ class _ResultScreenState extends State<ResultScreen>
                 child: Column(
                   children: [
                     Text(
-                      widget.passed ? AppStrings.wellDone : AppStrings.keepTrying,
+                      widget.passed
+                          ? AppStrings.wellDone
+                          : AppStrings.keepTrying,
                       style: const TextStyle(
                         color: AppColors.textPrimary,
                         fontSize: 32,
@@ -124,7 +126,7 @@ class _ResultScreenState extends State<ResultScreen>
                         border: Border.all(color: AppColors.cardBorder),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           ),
@@ -162,21 +164,29 @@ class _ResultScreenState extends State<ResultScreen>
                       height: 58,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Pop both ResultScreen and QuizScreen, return passed to LevelMap
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop(widget.passed);
+                          // QuizScreen used pushReplacement → ResultScreen is now
+                          // on top of LessonScreen. One single pop(passed) returns
+                          // `passed` back to LessonScreen's _goToQuiz() await,
+                          // which then pops itself back to LevelMapScreen.
+                          Navigator.pop(context, widget.passed);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: widget.passed ? AppColors.success : levelColor,
+                          backgroundColor: widget.passed
+                              ? AppColors.success
+                              : levelColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                           elevation: 2,
-                          shadowColor: (widget.passed ? AppColors.success : levelColor).withOpacity(0.4),
+                          shadowColor: (widget.passed
+                                  ? AppColors.success
+                                  : levelColor)
+                              .withValues(alpha: 0.4),
                         ),
                         child: Text(
-                          widget.passed ? AppStrings.nextLevel : AppStrings.retryQuiz,
+                          widget.passed
+                              ? AppStrings.nextLevel
+                              : AppStrings.retryQuiz,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -192,7 +202,8 @@ class _ResultScreenState extends State<ResultScreen>
                       width: double.infinity,
                       height: 50,
                       child: TextButton(
-                        onPressed: () => Navigator.popUntil(context, (route) => route.isFirst),
+                        onPressed: () => Navigator.popUntil(
+                            context, (route) => route.isFirst),
                         child: const Text(
                           AppStrings.backHome,
                           style: TextStyle(
@@ -215,7 +226,8 @@ class _ResultScreenState extends State<ResultScreen>
 
 class _StatItem extends StatelessWidget {
   final String icon, value, label;
-  const _StatItem({required this.icon, required this.value, required this.label});
+  const _StatItem(
+      {required this.icon, required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +243,8 @@ class _StatItem extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        Text(label, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+        Text(label,
+            style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
       ],
     );
   }
