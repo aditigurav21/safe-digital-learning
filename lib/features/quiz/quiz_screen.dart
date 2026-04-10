@@ -71,24 +71,24 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     _cardCtrl.forward();
   }
 
-  void _finish() async {
-  final passed = _score >= (questions.length / 2).ceil();
+  void _finish() {
+    final passed = _score >= (questions.length / 2).ceil();
 
-  final result = await Navigator.push<int>(
-    context,
-    MaterialPageRoute(
-      builder: (_) => ResultScreen(
-        score: _score,
-        total: questions.length,
-        levelData: widget.levelData,
-        passed: passed,
+    // ResultScreen handles its own navigation:
+    // it pops itself then pops QuizScreen, returning `passed` to LevelMapScreen.
+    // We just push it — do NOT pop here or await a return value.
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ResultScreen(
+          score: _score,
+          total: questions.length,
+          levelData: widget.levelData,
+          passed: passed,
+        ),
       ),
-    ),
-  );
-
-  // return score back to LessonScreen → LevelMap
-  Navigator.pop(context, result ?? _score);
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +180,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 decoration: BoxDecoration(
                   color: AppColors.levelLight(widget.levelData.level),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: levelColor.withOpacity(0.3)),
+                  border: Border.all(color: levelColor.withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   '⭐ $_score',
@@ -206,18 +206,21 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             color: _selectedAnswer == null
                 ? AppColors.cardBorder
                 : _isCorrect
-                    ? AppColors.success.withOpacity(0.5)
-                    : AppColors.error.withOpacity(0.5),
+                    ? AppColors.success.withValues(alpha: 0.5)
+                    : AppColors.error.withValues(alpha: 0.5),
             width: 2,
           ),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 3)),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Sender label
             Container(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
               decoration: BoxDecoration(
@@ -242,8 +245,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 ],
               ),
             ),
-
-            // Scenario text
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -324,19 +325,19 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   Widget _buildExplanation() {
     final isLast = _index == questions.length - 1;
     final correct = _isCorrect;
-    final answer = _selectedAnswer!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Verdict banner
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           decoration: BoxDecoration(
             color: correct ? AppColors.successLight : AppColors.errorLight,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: correct ? AppColors.success.withOpacity(0.4) : AppColors.error.withOpacity(0.4),
+              color: correct
+                  ? AppColors.success.withValues(alpha: 0.4)
+                  : AppColors.error.withValues(alpha: 0.4),
             ),
           ),
           child: Row(
@@ -372,7 +373,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
         const SizedBox(height: 14),
 
-        // Explanation card
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
@@ -385,15 +385,21 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             children: [
               const Text(
                 '💡 Why?',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 10),
               Text(
                 current.explanation,
-                style: const TextStyle(fontSize: 16, color: AppColors.textSecondary, height: 1.6),
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textSecondary,
+                  height: 1.6,
+                ),
               ),
-
-              // Red flags
               if (current.redFlags.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Container(
@@ -401,7 +407,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                   decoration: BoxDecoration(
                     color: AppColors.errorLight,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.error.withOpacity(0.2)),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,11 +427,22 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('• ', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700, fontSize: 16)),
+                              const Text(
+                                '• ',
+                                style: TextStyle(
+                                  color: AppColors.error,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                ),
+                              ),
                               Expanded(
                                 child: Text(
                                   flag,
-                                  style: const TextStyle(fontSize: 15, color: AppColors.error, height: 1.4),
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: AppColors.error,
+                                    height: 1.4,
+                                  ),
                                 ),
                               ),
                             ],
@@ -442,7 +459,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
         const SizedBox(height: 16),
 
-        // Next / Finish button
         SizedBox(
           width: double.infinity,
           height: 56,
@@ -455,7 +471,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             ),
             child: Text(
               isLast ? '🏁 See My Results' : AppStrings.nextQuestion,
-              style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         ),
@@ -475,9 +495,6 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 }
 
-// ──────────────────────────────────────────────
-// Big answer button
-// ──────────────────────────────────────────────
 class _BigAnswerButton extends StatelessWidget {
   final String label;
   final String subtitle;
@@ -503,7 +520,7 @@ class _BigAnswerButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: lightColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.5), width: 2),
+          border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -519,7 +536,7 @@ class _BigAnswerButton extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               subtitle,
-              style: TextStyle(color: color.withOpacity(0.7), fontSize: 13),
+              style: TextStyle(color: color.withValues(alpha: 0.7), fontSize: 13),
             ),
           ],
         ),

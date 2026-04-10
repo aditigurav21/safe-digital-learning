@@ -412,7 +412,9 @@ class _InstagramFeedScreenState extends State<InstagramFeedScreen> {
             SizedBox(height: 8),
             Text('🚩 Username looks like "flipkart" but has "_99"'),
             SizedBox(height: 8),
-            Text('🚩 "Only 3 left!" creates fake urgency'),
+            Text('🚩 Only 3 left!" creates fake urgency'),
+            SizedBox(height: 8),
+            Text('🚩 account is not verified'),
             SizedBox(height: 12),
             Text(
               'Let\'s see where this link takes you...',

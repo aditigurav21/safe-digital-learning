@@ -99,7 +99,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Text(
-            '+10 XP',
+            '+10 P',
             style: TextStyle(
               color: AppColors.primary,
               fontWeight: FontWeight.w700,
@@ -184,7 +184,7 @@ class HomeScreen extends StatelessWidget {
           Row(
             children: const [
               _StatChip('3', 'Lessons', '✅'),
-              _StatChip('225', 'XP', '⚡'),
+              _StatChip('225', 'P', '⚡'),
               _StatChip('2', 'Badges', '🏅'),
             ],
           ),
@@ -274,7 +274,7 @@ class _MissionCard extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: m.color.withOpacity(0.2),
+                color: m.color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
