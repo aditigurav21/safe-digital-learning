@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
 */
 import 'package:flutter/material.dart';
 import 'routes/app_routes.dart';
+import 'core/auth/auth_wrapper.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -29,9 +30,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Safe Digital Learning',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.orange),
-      initialRoute: '/',  // home screen
-      routes: AppRoutes.routes, // use all your defined routes
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+        fontFamily: 'Roboto',
+      ),
+      home: const AuthWrapper(),
+      routes: AppRoutes.routes,
     );
   }
 }

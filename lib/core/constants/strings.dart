@@ -45,7 +45,7 @@ class AppStrings {
   static const backHome = 'Back to Home';
   static const score = 'Score';
   static const accuracy = 'Accuracy';
-  static const xpEarned = 'XP Earned';
+  static const xpEarned = 'pEarned';
 
   // Snackbar
   static String levelUnlocked(int level) => '🎉 Level $level complete! Next level unlocked!';

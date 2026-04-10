@@ -118,7 +118,7 @@ class LevelIntroScreen extends StatelessWidget {
                           Container(width: 1, height: 32, color: AppColors.cardBorder),
                           _InfoChip(icon: '❓', label: '${levelData.questions.length} questions'),
                           Container(width: 1, height: 32, color: AppColors.cardBorder),
-                          const _InfoChip(icon: '⚡', label: '100 XP'),
+                          const _InfoChip(icon: '⚡', label: '100 P'),
                         ],
                       ),
                     ),
@@ -161,17 +161,6 @@ class LevelIntroScreen extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text(
-                    'Maybe later',
-                    style: TextStyle(color: AppColors.textMuted, fontSize: 15),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

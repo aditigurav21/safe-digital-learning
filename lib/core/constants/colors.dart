@@ -62,7 +62,7 @@ class AppColors {
     }
   }
 
-  // XP bar
+  // pbar
   static const xpBar = Color(0xFF5B8DEF);
   static const xpBarBg = Color(0xFFD6E4FF);
 }

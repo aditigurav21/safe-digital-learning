@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.safe_digital_learning">
     <application
         android:label="safe_digital_learning"
         android:name="${applicationName}"

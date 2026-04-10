@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
 
@@ -8,7 +9,18 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text("Guardian Path")),
+      appBar: AppBar(
+        title: const Text("Home"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              // AuthWrapper will auto-redirect to LoginScreen
+            },
+          )
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -99,7 +111,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Text(
-            '+10 XP',
+            '+10 P',
             style: TextStyle(
               color: AppColors.primary,
               fontWeight: FontWeight.w700,
@@ -184,7 +196,7 @@ class HomeScreen extends StatelessWidget {
           Row(
             children: const [
               _StatChip('3', 'Lessons', '✅'),
-              _StatChip('225', 'XP', '⚡'),
+              _StatChip('225', 'P', '⚡'),
               _StatChip('2', 'Badges', '🏅'),
             ],
           ),
