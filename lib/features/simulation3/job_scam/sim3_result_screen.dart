@@ -59,7 +59,7 @@ class Sim3ResultScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(color: badgeColor, width: 6),
-                    color: badgeColor.withOpacity(0.1),
+                    color: badgeColor.withValues(alpha:0.1),
                   ),
                   child: Center(
                     child: Text(

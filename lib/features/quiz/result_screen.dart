@@ -68,8 +68,8 @@ class _ResultScreenState extends State<ResultScreen>
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: widget.passed
-                          ? AppColors.success.withOpacity(0.4)
-                          : AppColors.warning.withOpacity(0.4),
+                          ? AppColors.success.withValues(alpha:0.4)
+                          : AppColors.warning.withValues(alpha:0.4),
                       width: 3,
                     ),
                   ),
@@ -124,7 +124,7 @@ class _ResultScreenState extends State<ResultScreen>
                         border: Border.all(color: AppColors.cardBorder),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha:0.04),
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           ),
@@ -162,10 +162,13 @@ class _ResultScreenState extends State<ResultScreen>
                       height: 58,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Pop both ResultScreen and QuizScreen, return passed to LevelMap
+                          // Stack: LevelMapScreen → LevelIntroScreen → QuizScreen → ResultScreen
+                          // (LessonScreen and AnimationScreen used pushReplacement so they are gone)
+                          // Pop ResultScreen + QuizScreen, then pop LevelIntroScreen back to LevelMap
+                          // carrying the passed result.
                           Navigator.of(context)
-                            ..pop()
-                            ..pop(widget.passed);
+                            ..pop()          // pop ResultScreen (removes QuizScreen's replacement)
+                            ..pop(widget.passed); // pop LevelIntroScreen → returns to LevelMapScreen
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: widget.passed ? AppColors.success : levelColor,
@@ -173,7 +176,7 @@ class _ResultScreenState extends State<ResultScreen>
                             borderRadius: BorderRadius.circular(16),
                           ),
                           elevation: 2,
-                          shadowColor: (widget.passed ? AppColors.success : levelColor).withOpacity(0.4),
+                          shadowColor: (widget.passed ? AppColors.success : levelColor).withValues(alpha:0.4),
                         ),
                         child: Text(
                           widget.passed ? AppStrings.nextLevel : AppStrings.retryQuiz,

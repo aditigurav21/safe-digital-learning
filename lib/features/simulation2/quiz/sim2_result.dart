@@ -35,7 +35,7 @@ class Sim2ResultScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: gradeColor.withOpacity(0.1),
+                  color: gradeColor.withValues(alpha:0.1),
                 ),
                 child: Text(
                   '$score/$total',

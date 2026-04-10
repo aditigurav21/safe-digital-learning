@@ -274,7 +274,7 @@ class _MissionCard extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: m.color.withOpacity(0.2),
+                color: m.color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(

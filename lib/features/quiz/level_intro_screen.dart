@@ -49,7 +49,7 @@ class LevelIntroScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: lightColor,
                         shape: BoxShape.circle,
-                        border: Border.all(color: color.withOpacity(0.3), width: 2),
+                        border: Border.all(color: color.withValues(alpha:0.3), width: 2),
                       ),
                       child: Center(
                         child: Text(levelData.emoji, style: const TextStyle(fontSize: 54)),
@@ -64,7 +64,7 @@ class LevelIntroScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: lightColor,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: color.withOpacity(0.4)),
+                        border: Border.all(color: color.withValues(alpha:0.4)),
                       ),
                       child: Text(
                         'LEVEL ${levelData.level}',
@@ -145,7 +145,7 @@ class LevelIntroScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     elevation: 2,
-                    shadowColor: color.withOpacity(0.4),
+                    shadowColor: color.withValues(alpha:0.4),
                   ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,

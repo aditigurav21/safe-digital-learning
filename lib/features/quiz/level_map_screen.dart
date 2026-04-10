@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'lesson_model.dart';
-import 'lesson_screen.dart';
+import 'level_intro_screen.dart';
 import 'progress_manager.dart';
 import '../../core/constants/colors.dart';
 import '../../core/constants/strings.dart';
@@ -48,10 +48,12 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
 
     final levelData = allLevels[level - 1];
 
-    // Navigate to Lesson first
+    // Navigate to LevelIntroScreen — it will handle the full Lesson→Animation→Quiz flow
+    // ResultScreen pops twice (itself + QuizScreen) and returns `passed` here via
+    // LevelIntroScreen's Navigator.pushReplacement chain.
     final bool? passed = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (_) => LessonScreen(levelData: levelData)),
+      MaterialPageRoute(builder: (_) => LevelIntroScreen(levelData: levelData)),
     );
 
     if (passed == true) {
@@ -255,20 +257,20 @@ class _LevelCard extends StatelessWidget {
             color: isCurrent
                 ? color
                 : completed
-                    ? AppColors.success.withOpacity(0.4)
-                    : AppColors.cardBorder,
+                ? AppColors.success.withValues(alpha:0.4)
+                : AppColors.cardBorder,
             width: isCurrent ? 2.5 : 1.5,
           ),
           boxShadow: [
             if (isCurrent)
               BoxShadow(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha:0.2),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               )
             else
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha:0.04),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -286,15 +288,15 @@ class _LevelCard extends StatelessWidget {
                   color: unlocked ? lightColor : AppColors.lockedLight,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: unlocked ? color.withOpacity(0.3) : AppColors.locked.withOpacity(0.2),
+                    color: unlocked ? color.withValues(alpha:0.3) : AppColors.locked.withValues(alpha:0.2),
                   ),
                 ),
                 child: Center(
                   child: completed
                       ? const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 32)
                       : unlocked
-                          ? Text(levelData.emoji, style: const TextStyle(fontSize: 30))
-                          : const Icon(Icons.lock_rounded, color: AppColors.locked, size: 28),
+                      ? Text(levelData.emoji, style: const TextStyle(fontSize: 30))
+                      : const Icon(Icons.lock_rounded, color: AppColors.locked, size: 28),
                 ),
               ),
 
@@ -385,10 +387,10 @@ class _InfoChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: unlocked ? color.withOpacity(0.1) : AppColors.lockedLight,
+        color: unlocked ? color.withValues(alpha:0.1) : AppColors.lockedLight,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: unlocked ? color.withOpacity(0.3) : AppColors.cardBorder,
+          color: unlocked ? color.withValues(alpha:0.3) : AppColors.cardBorder,
         ),
       ),
       child: Row(

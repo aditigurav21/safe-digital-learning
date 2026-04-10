@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'lesson_model.dart';
 import 'quiz_screen.dart';
+import 'topic_animation_screen.dart'; // ← NEW import
 import '../../core/constants/colors.dart';
 import '../../core/constants/strings.dart';
 
@@ -46,7 +47,7 @@ class _LessonScreenState extends State<LessonScreen>
 
   void _nextPage() async {
     if (isLastPage) {
-      _goToQuiz();
+      _goToAnimation();
       return;
     }
     await _fadeCtrl.reverse();
@@ -55,6 +56,43 @@ class _LessonScreenState extends State<LessonScreen>
     setState(() => _pageIndex++);
     _fadeCtrl.forward();
     _slideCtrl.forward();
+  }
+
+  void _goToAnimation() {
+    final topic = widget.levelData.animationKey;
+
+    if (topic == null) {
+      _goToQuiz();
+      return;
+    }
+
+    // Capture navigator BEFORE pushReplacement removes this widget from tree.
+    final navigator = Navigator.of(context);
+
+    navigator.pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => TopicAnimationScreen(
+          topicKey: topic,
+          levelColor: levelColor,
+          onFinished: () {
+            // This callback fires from inside TopicAnimationScreen.
+            // Use the same navigator — it is still valid.
+            navigator.pushReplacement(
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) =>
+                    QuizScreen(levelData: widget.levelData),
+                transitionsBuilder: (_, anim, __, child) =>
+                    FadeTransition(opacity: anim, child: child),
+                transitionDuration: const Duration(milliseconds: 350),
+              ),
+            );
+          },
+        ),
+        transitionsBuilder: (_, anim, __, child) =>
+            FadeTransition(opacity: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 350),
+      ),
+    );
   }
 
   void _goToQuiz() {
@@ -145,7 +183,7 @@ class _LessonScreenState extends State<LessonScreen>
             decoration: BoxDecoration(
               color: AppColors.levelLight(widget.levelData.level),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: levelColor.withOpacity(0.3)),
+              border: Border.all(color: levelColor.withValues(alpha:0.3)),
             ),
             child: Text(
               '${_pageIndex + 1} / ${pages.length}',
@@ -178,8 +216,8 @@ class _LessonScreenState extends State<LessonScreen>
               color: done
                   ? levelColor
                   : active
-                      ? levelColor
-                      : AppColors.xpBarBg,
+                  ? levelColor
+                  : AppColors.xpBarBg,
               borderRadius: BorderRadius.circular(5),
             ),
           );
@@ -218,7 +256,7 @@ class _LessonScreenState extends State<LessonScreen>
             border: Border.all(color: AppColors.cardBorder),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha:0.04),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -257,13 +295,18 @@ class _LessonScreenState extends State<LessonScreen>
             backgroundColor: levelColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             elevation: 2,
-            shadowColor: levelColor.withOpacity(0.4),
+            shadowColor: levelColor.withValues(alpha:0.4),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                isLastPage ? AppStrings.startQuiz : AppStrings.nextPage,
+                // When on the last lesson page, show "See Animation" instead of "Start Quiz"
+                isLastPage
+                    ? (widget.levelData.animationKey != null
+                    ? '▶  Watch Animation'
+                    : AppStrings.startQuiz)
+                    : AppStrings.nextPage,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -272,7 +315,13 @@ class _LessonScreenState extends State<LessonScreen>
               ),
               if (isLastPage) ...[
                 const SizedBox(width: 8),
-                const Icon(Icons.quiz_rounded, color: Colors.white, size: 20),
+                Icon(
+                  widget.levelData.animationKey != null
+                      ? Icons.play_circle_rounded
+                      : Icons.quiz_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ],
             ],
           ),
@@ -283,7 +332,7 @@ class _LessonScreenState extends State<LessonScreen>
 }
 
 // ──────────────────────────────────────────────
-// Sub-widgets
+// Sub-widgets (unchanged from original)
 // ──────────────────────────────────────────────
 
 class _AnimatedEmoji extends StatefulWidget {
@@ -323,9 +372,9 @@ class _AnimatedEmojiState extends State<_AnimatedEmoji>
           width: 110,
           height: 110,
           decoration: BoxDecoration(
-            color: widget.color.withOpacity(0.1),
+            color: widget.color.withValues(alpha:0.1),
             shape: BoxShape.circle,
-            border: Border.all(color: widget.color.withOpacity(0.3), width: 2),
+            border: Border.all(color: widget.color.withValues(alpha:0.3), width: 2),
           ),
           child: Center(
             child: Text(widget.emoji, style: const TextStyle(fontSize: 52)),
@@ -346,9 +395,9 @@ class _TipBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha:0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha:0.3)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -367,7 +416,7 @@ class _TipBox extends StatelessWidget {
               tip,
               style: TextStyle(
                 fontSize: 15,
-                color: color.withOpacity(0.9),
+                color: color.withValues(alpha:0.9),
                 fontWeight: FontWeight.w600,
                 height: 1.5,
               ),

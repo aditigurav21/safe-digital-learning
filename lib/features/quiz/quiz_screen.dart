@@ -176,7 +176,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 decoration: BoxDecoration(
                   color: AppColors.levelLight(widget.levelData.level),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: levelColor.withOpacity(0.3)),
+                  border: Border.all(color: levelColor.withValues(alpha:0.3)),
                 ),
                 child: Text(
                   '⭐ $_score',
@@ -202,12 +202,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             color: _selectedAnswer == null
                 ? AppColors.cardBorder
                 : _isCorrect
-                    ? AppColors.success.withOpacity(0.5)
-                    : AppColors.error.withOpacity(0.5),
+                    ? AppColors.success.withValues(alpha:0.5)
+                    : AppColors.error.withValues(alpha:0.5),
             width: 2,
           ),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 3)),
+            BoxShadow(color: Colors.black.withValues(alpha:0.05), blurRadius: 10, offset: const Offset(0, 3)),
           ],
         ),
         child: Column(
@@ -332,7 +332,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             color: correct ? AppColors.successLight : AppColors.errorLight,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: correct ? AppColors.success.withOpacity(0.4) : AppColors.error.withOpacity(0.4),
+              color: correct ? AppColors.success.withValues(alpha:0.4) : AppColors.error.withValues(alpha:0.4),
             ),
           ),
           child: Row(
@@ -397,7 +397,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                   decoration: BoxDecoration(
                     color: AppColors.errorLight,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.error.withOpacity(0.2)),
+                    border: Border.all(color: AppColors.error.withValues(alpha:0.2)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -499,7 +499,7 @@ class _BigAnswerButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: lightColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.5), width: 2),
+          border: Border.all(color: color.withValues(alpha:0.5), width: 2),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -515,7 +515,7 @@ class _BigAnswerButton extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               subtitle,
-              style: TextStyle(color: color.withOpacity(0.7), fontSize: 13),
+              style: TextStyle(color: color.withValues(alpha:0.7), fontSize: 13),
             ),
           ],
         ),

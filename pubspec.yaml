@@ -61,14 +61,15 @@ flutter:
     - assets/images/draw.jpg
     - assets/images/iphone.jpg
     - assets/images/pav-bhaji.jpg # 👈 ADD THIS LINE
+    - assets/audio/ringtone.mp3
+    - assets/audio/scam_voice.mp3
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
 
-  assets:
-    - assets/audio/ringtone.mp3
-    - assets/audio/scam_voice.mp3 
+
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
