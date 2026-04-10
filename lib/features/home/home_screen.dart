@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: AppBar(title: const Text("Guardian Path")),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -13,14 +16,22 @@ class HomeScreen extends StatelessWidget {
             children: [
               _buildHeader(),
               _buildStreakBanner(),
+
               const SizedBox(height: 24),
               _buildSectionTitle('🎮 Missions'),
               const SizedBox(height: 12),
               _buildMissionCards(context),
+
               const SizedBox(height: 24),
               _buildSectionTitle('📊 Your Progress'),
               const SizedBox(height: 12),
               _buildProgressCard(context),
+
+              const SizedBox(height: 24),
+              _buildSectionTitle('⚡ Quick Actions'),
+              const SizedBox(height: 12),
+              _buildExtraButtons(context),
+
               const SizedBox(height: 32),
             ],
           ),
@@ -58,7 +69,7 @@ class HomeScreen extends StatelessWidget {
           CircleAvatar(
             radius: 24,
             backgroundColor: AppColors.primaryLight,
-            child: Icon(Icons.person, color: Colors.white),
+            child: const Icon(Icons.person, color: Colors.white),
           ),
         ],
       ),
@@ -76,7 +87,7 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text('🔥', style: TextStyle(fontSize: 26)),
+          const Text('🔥', style: TextStyle(fontSize: 26)),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -130,6 +141,13 @@ class HomeScreen extends StatelessWidget {
         route: '/sim2-intro',
       ),
       _MissionData(
+        icon: '💼',
+        title: 'Job Scam',
+        description: 'Identify fake jobs',
+        color: AppColors.level4,
+        route: '/sim3-intro',
+      ),
+      _MissionData(
         icon: '🧠',
         title: 'Safety Quiz',
         description: 'Test knowledge',
@@ -163,17 +181,14 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-
           Row(
-            children: [
+            children: const [
               _StatChip('3', 'Lessons', '✅'),
               _StatChip('225', 'XP', '⚡'),
               _StatChip('2', 'Badges', '🏅'),
             ],
           ),
-
           const SizedBox(height: 16),
-
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
@@ -182,6 +197,41 @@ class HomeScreen extends StatelessWidget {
               backgroundColor: AppColors.xpBarBg,
               valueColor: AlwaysStoppedAnimation(AppColors.primary),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ✅ All buttons from other branch preserved here
+  Widget _buildExtraButtons(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () => Navigator.pushNamed(context, '/create-account'),
+            child: const Text("Simulation 1 (Account Setup)"),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () => Navigator.pushNamed(context, '/sim2-intro'),
+            child: const Text("Simulation 2 (Scam Detection)"),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () => Navigator.pushNamed(context, '/sim3-intro'),
+            child: const Text("Simulation 3 (Job Scam)"),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () => Navigator.pushNamed(context, '/quiz'),
+            child: const Text("Quiz"),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () => Navigator.pushNamed(context, '/dashboard'),
+            child: const Text("Dashboard"),
           ),
         ],
       ),
@@ -228,41 +278,41 @@ class _MissionCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child: Text(m.icon, style: TextStyle(fontSize: 22)),
+                child: Text(m.icon, style: const TextStyle(fontSize: 22)),
               ),
             ),
             const SizedBox(width: 12),
 
-
-            // FIXED OVERFLOW HERE
             Expanded(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        m.title,
-        style: TextStyle(
-          color: AppColors.textPrimary,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      Text(
-        m.description,
-        style: TextStyle(
-          color: AppColors.textSecondary,
-          fontSize: 12,
-        ),
-      ),
-    ],
-  ),
-),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    m.title,
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    m.description,
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-ElevatedButton(
-  onPressed: () => Navigator.pushNamed(context, m.route),
-  child: Text("Start"),
-),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, m.route),
+              child: const Text("Start"),
+            ),
 
-Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.textMuted),
+            const SizedBox(width: 8),
+            Icon(Icons.arrow_forward_ios,
+                size: 14, color: AppColors.textMuted),
           ],
         ),
       ),
@@ -280,8 +330,8 @@ class _StatChip extends StatelessWidget {
       child: Column(
         children: [
           Text(icon),
-          Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(label, style: TextStyle(fontSize: 10)),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(label, style: const TextStyle(fontSize: 10)),
         ],
       ),
     );

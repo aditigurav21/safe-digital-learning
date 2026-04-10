@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+
+  static const text = Colors.black87;
   // Primary brand (soft blue)
   static const primary = Color(0xFF5B8DEF);       
   static const primaryLight = Color(0xFF8FB3FF);
