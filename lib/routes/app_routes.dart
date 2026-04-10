@@ -32,6 +32,14 @@ import '../features/simulation3/job_scam/scam_reveal_screen.dart';
 import '../features/simulation3/job_scam/sim3_quiz_screen.dart';
 import '../features/simulation3/job_scam/sim3_result_screen.dart';
 
+//simulation 4 - health insaurance
+import '../features/simulation4/sim4_intro_screen.dart';
+import '../features/simulation4/sim4_scam_detector_screen.dart';
+import '../features/simulation4/sim4_policy_decoder_screen.dart';
+import '../features/simulation4/sim4_claim_screen.dart';
+import '../features/simulation4/quiz/sim4_quiz_screen.dart';
+import '../features/simulation4/quiz/sim4_result_screen.dart';
+
 // Quiz
 import '../features/quiz/level_map_screen.dart';
 import '../features/quiz/quiz_screen.dart';
@@ -86,6 +94,17 @@ class AppRoutes {
     '/sim3-reveal': (context) => const ScamRevealScreen(),
     '/sim3-quiz': (context) => const Sim3QuizScreen(),
     '/sim3-result': (context) => const Sim3ResultScreen(),
+
+    //simulation 4
+
+    '/sim4-intro': (_) => const Sim4IntroScreen(),
+    '/sim4-scam-detector': (_) => const Sim4ScamDetectorScreen(),
+    '/sim4-policy-decoder': (_) => const Sim4PolicyDecoderScreen(),
+    //'/sim4-claim': (_) => const Sim4ClaimScreen(),
+    '/sim4-claim': (_) => const InsuranceFormSimulation(),
+    '/sim4-quiz': (_) => const Sim4QuizScreen(),
+    '/sim4-quiz-result': (_) => const Sim4ResultScreen(),
+
 
     // -------------------------
     // GLOBAL QUIZ

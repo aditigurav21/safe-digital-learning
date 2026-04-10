@@ -136,7 +136,7 @@ class HomeScreen extends StatelessWidget {
       _MissionData(
         icon: '🕵️',
         title: 'Social Media Scam Simulation',
-        description: 'Avoid scams',
+        description: 'Avoid scams on social media',
         color: AppColors.level2,
         route: '/sim2-intro',
       ),
@@ -146,6 +146,13 @@ class HomeScreen extends StatelessWidget {
         description: 'Identify fake jobs',
         color: AppColors.level4,
         route: '/sim3-intro',
+      ),
+      _MissionData(
+        icon: '🛡️',   
+        title: 'Health Insurance Scam Simulation',
+        description: 'Identify fake insurance',
+        color: Colors.teal,   
+        route: '/sim4-intro',
       ),
       _MissionData(
         icon: '🧠',
