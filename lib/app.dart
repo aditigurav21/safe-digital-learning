@@ -2,7 +2,11 @@
 import 'routes/app_routes.dart';
 
 class MyApp extends StatelessWidget {
+<<<<<<< HEAD
    const MyApp({super.key});
+=======
+  const MyApp({super.key});
+>>>>>>> origin/simulation-insta-1
   @override
   
   Widget build(BuildContext context) {
