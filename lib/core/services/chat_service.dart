@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ChatbotService {
-  static const String apiKey = "AIzaSyDJ0awKKe7igyS4z3hmUEFl8fM9TwCQrdw";
+  static const String apiKey = "AIzaSyA1OCZKJ3sSnpsj-v3KZRpxsk3LxCrsbCY";
 
   static Future<String> sendMessage(String userMessage) async {
   int retries = 3;
