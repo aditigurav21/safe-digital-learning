@@ -1,6 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_digital_learning/l10n/app_localizations.dart';
+
+
+
 import '../../../providers/tts_provider.dart';
 import '../../../widgets/tts_toggle_button.dart';
 
@@ -13,13 +16,6 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   final TextEditingController otpController = TextEditingController();
-
-  static const _screenTexts = [
-    "OTP Verification screen.",
-    "Enter the OTP sent to your mobile number ending in 56789.",
-    "Remember: Never share this OTP with anyone on phone — not even someone claiming to be from the government or bank.",
-    "Tap Submit OTP button when you have entered the code.",
-  ];
 
   @override
   void initState() {
@@ -35,7 +31,13 @@ class _OtpScreenState extends State<OtpScreen> {
   void _speakScreen() {
     final tts = context.read<TtsProvider>();
     if (!tts.enabled) return;
-    tts.speak(_screenTexts.join(' '));
+    final l = AppLocalizations.of(context)!;
+    tts.speak([
+      l.sim1_otp_title,
+      l.sim1_otp_subtitle,
+      l.sim1_otp_warningText,
+      l.sim1_otp_submitBtn,
+    ].join(' '));
   }
 
   @override
@@ -45,113 +47,128 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   void showScamPopup() {
+    final l = AppLocalizations.of(context)!;
     final tts = context.read<TtsProvider>();
-    tts.speak(
-      "Incoming message alert. "
-      "Someone claiming to be from PM Kisan Office is saying: "
-      "Your 6000 rupee payment is ready. Please share the OTP you just received. "
-      "What will you do? Tap Share OTP or Refuse and Block."
-    );
+    tts.speak(l.sim1_otp_scamPopupSpeak);
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        backgroundColor: Colors.red.shade50,
-        title: const Row(
-          children: [
-            Icon(Icons.message, color: Colors.red, size: 30),
-            SizedBox(width: 10),
-            Text("Incoming Message!", style: TextStyle(fontSize: 20, color: Colors.red)),
-          ],
-        ),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "\"Namaste ji, I am messaging from PM Kisan Office.\n\n"
-              "Your ₹6000 payment is ready. Please share the OTP you just received to confirm your identity.\"",
-              style: TextStyle(fontSize: 16, height: 1.7, fontStyle: FontStyle.italic),
+      builder: (context) {
+        final l = AppLocalizations.of(context)!;
+        return AlertDialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          backgroundColor: Colors.red.shade50,
+          title: Row(
+            children: [
+              const Icon(Icons.message, color: Colors.red, size: 30),
+              const SizedBox(width: 10),
+              Text(l.sim1_otp_scamPopupTitle,
+                  style: const TextStyle(fontSize: 20, color: Colors.red)),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l.sim1_otp_scamPopupBody,
+                style: const TextStyle(
+                    fontSize: 16,
+                    height: 1.7,
+                    fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(height: 14),
+              Text(l.sim1_otp_scamPopupQuestion,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          actionsAlignment: MainAxisAlignment.spaceAround,
+          actions: [
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/sim1-link',
+                    arguments: false);
+              },
+              icon: const Icon(Icons.share),
+              label: Text(l.sim1_otp_shareOtpBtn,
+                  style: const TextStyle(fontSize: 15)),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white),
             ),
-            SizedBox(height: 14),
-            Text("What will you do?", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                _showSafeChoice();
+              },
+              icon: const Icon(Icons.block),
+              label: Text(l.sim1_otp_refuseBtn,
+                  style: const TextStyle(fontSize: 15)),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white),
+            ),
           ],
-        ),
-        actionsAlignment: MainAxisAlignment.spaceAround,
-        actions: [
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/sim1-link', arguments: false);
-            },
-            icon: const Icon(Icons.share),
-            label: const Text("Share OTP", style: TextStyle(fontSize: 15)),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pop(context);
-              _showSafeChoice();
-            },
-            icon: const Icon(Icons.block),
-            label: const Text("Refuse & Block", style: TextStyle(fontSize: 15)),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   void _showSafeChoice() {
+    final l = AppLocalizations.of(context)!;
     final tts = context.read<TtsProvider>();
-    tts.speak(
-      "Great Choice! You are right to refuse. "
-      "No government officer ever asks for OTP on phone or message. "
-      "Real PM Kisan payments happen automatically. No OTP needed. "
-      "If someone asks for OTP, it is always a scam. Block and call 1930."
-    );
+    tts.speak(l.sim1_otp_safeChoiceSpeak);
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        backgroundColor: Colors.green.shade50,
-        title: const Row(
-          children: [
-            Icon(Icons.shield, color: Colors.green, size: 32),
-            SizedBox(width: 10),
-            Text("Great Choice!", style: TextStyle(fontSize: 20)),
-          ],
-        ),
-        content: const Text(
-          "You are RIGHT to refuse!\n\n"
-          "No government officer EVER asks for OTP on phone or message.\n\n"
-          "Real PM Kisan payments happen automatically — no OTP needed.\n\n"
-          "If someone asks for OTP, it is ALWAYS a scam. Block and call 1930.",
-          style: TextStyle(fontSize: 15, height: 1.7),
-        ),
-        actions: [
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/sim1-link', arguments: true);
-            },
-            icon: const Icon(Icons.arrow_forward),
-            label: const Text("Continue", style: TextStyle(fontSize: 16)),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+      builder: (context) {
+        final l = AppLocalizations.of(context)!;
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18)),
+          backgroundColor: Colors.green.shade50,
+          title: Row(
+            children: [
+              const Icon(Icons.shield, color: Colors.green, size: 32),
+              const SizedBox(width: 10),
+              Text(l.sim1_otp_safeChoiceTitle,
+                  style: const TextStyle(fontSize: 20)),
+            ],
           ),
-        ],
-      ),
+          content: Text(
+            l.sim1_otp_safeChoiceBody,
+            style: const TextStyle(fontSize: 15, height: 1.7),
+          ),
+          actions: [
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/sim1-link',
+                    arguments: true);
+              },
+              icon: const Icon(Icons.arrow_forward),
+              label: Text(l.sim1_common_continue,
+                  style: const TextStyle(fontSize: 16)),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white),
+            ),
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue.shade800,
         foregroundColor: Colors.white,
-        title: const Text("OTP Verification"),
+        title: Text(l.sim1_otp_appBarTitle),
         actions: [TtsToggleButton(onToggled: _speakScreen)],
       ),
       body: SingleChildScrollView(
@@ -160,23 +177,29 @@ class _OtpScreenState extends State<OtpScreen> {
           children: [
             const Icon(Icons.lock_clock, size: 60, color: Colors.blue),
             const SizedBox(height: 16),
-            const Text("Enter OTP sent to your mobile",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(l.sim1_otp_title,
+                style: const TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            const Text("OTP sent to ****56789", style: TextStyle(fontSize: 14, color: Colors.grey)),
+            Text(l.sim1_otp_subtitle,
+                style:
+                const TextStyle(fontSize: 14, color: Colors.grey)),
             const SizedBox(height: 24),
             TextField(
               controller: otpController,
               keyboardType: TextInputType.number,
-              style: const TextStyle(fontSize: 22, letterSpacing: 10),
+              style:
+              const TextStyle(fontSize: 22, letterSpacing: 10),
               maxLength: 6,
               textAlign: TextAlign.center,
               decoration: InputDecoration(
-                labelText: "6-digit OTP",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                labelText: l.sim1_otp_fieldLabel,
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10)),
                 filled: true,
                 fillColor: Colors.grey.shade50,
-                contentPadding: const EdgeInsets.symmetric(vertical: 18),
+                contentPadding:
+                const EdgeInsets.symmetric(vertical: 18),
               ),
             ),
             const SizedBox(height: 20),
@@ -187,14 +210,15 @@ class _OtpScreenState extends State<OtpScreen> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.orange.shade300),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 26),
-                  SizedBox(width: 10),
+                  const Icon(Icons.warning_amber_rounded,
+                      color: Colors.orange, size: 26),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      "Remember: NEVER share this OTP with anyone on phone — not even someone claiming to be from the government or bank.",
-                      style: TextStyle(fontSize: 14, height: 1.6),
+                      l.sim1_otp_warningText,
+                      style: const TextStyle(fontSize: 14, height: 1.6),
                     ),
                   ),
                 ],
@@ -207,47 +231,57 @@ class _OtpScreenState extends State<OtpScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   final tts = context.read<TtsProvider>();
-                  tts.speak(
-                    "Wait! Did someone on the phone ask for this OTP? "
-                    "If yes, that is a scam. Stop. Hang up. "
-                    "You only enter OTP on the website — never tell it to anyone."
-                  );
+                  tts.speak(l.sim1_otp_submitWarningSpeak);
                   showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      title: const Row(
-                        children: [
-                          Icon(Icons.warning_amber_rounded, color: Colors.red, size: 30),
-                          SizedBox(width: 10),
-                          Text("Wait! ⚠", style: TextStyle(fontSize: 20)),
+                    builder: (context) {
+                      final l = AppLocalizations.of(context)!;
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        title: Row(
+                          children: [
+                            const Icon(Icons.warning_amber_rounded,
+                                color: Colors.red, size: 30),
+                            const SizedBox(width: 10),
+                            Text(l.sim1_otp_submitDialogTitle,
+                                style:
+                                const TextStyle(fontSize: 20)),
+                          ],
+                        ),
+                        content: Text(
+                          l.sim1_otp_submitDialogBody,
+                          style: const TextStyle(
+                              fontSize: 15, height: 1.7),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(
+                                  context, '/sim1-link',
+                                  arguments: false);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue),
+                            child: Text(l.sim1_common_understood,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white)),
+                          )
                         ],
-                      ),
-                      content: const Text(
-                        "Did someone on the phone ask for this OTP?\n\n"
-                        "If YES — that is a SCAM. Stop. Hang up.\n\n"
-                        "You only enter OTP on the WEBSITE — never tell it to anyone.",
-                        style: TextStyle(fontSize: 15, height: 1.7),
-                      ),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/sim1-link', arguments: false);
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                          child: const Text("Understood", style: TextStyle(fontSize: 16, color: Colors.white)),
-                        )
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade700,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text("Submit OTP", style: TextStyle(fontSize: 18)),
+                child: Text(l.sim1_otp_submitBtn,
+                    style: const TextStyle(fontSize: 18)),
               ),
             ),
             const SizedBox(height: 20),

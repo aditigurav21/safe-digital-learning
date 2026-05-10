@@ -1,3 +1,7 @@
+import 'package:safe_digital_learning/l10n/app_localizations.dart';
+
+
+
 
 class Sim1Question {
   final String question;
@@ -11,50 +15,31 @@ class Sim1Question {
   });
 }
 
-List<Sim1Question> sim1Questions = [
+/// Call this with AppLocalizations.of(context)! to get localized questions.
+List<Sim1Question> getSim1Questions(AppLocalizations l) => [
   Sim1Question(
-    question: "Someone calls and says 'Share your OTP to get your PM Kisan money'. What should you do?",
-    options: [
-      "Share the OTP with them",
-      "Refuse and hang up — it is a scam",
-      "Share only if they say please",
-    ],
+    question: l.sim1_q1,
+    options: [l.sim1_q1_opt1, l.sim1_q1_opt2, l.sim1_q1_opt3],
     correctIndex: 1,
   ),
   Sim1Question(
-    question: "Which of these websites is SAFE for PM Kisan?",
-    options: [
-      "bit.ly/kisan-help",
-      "pmkisan-support.xyz",
-      "https://pmkisan.gov.in",
-    ],
+    question: l.sim1_q2,
+    options: [l.sim1_q2_opt1, l.sim1_q2_opt2, l.sim1_q2_opt3],
     correctIndex: 2,
   ),
   Sim1Question(
-    question: "You get a message: 'Pay ₹200 now or your scheme will be cancelled!' What should you do?",
-    options: [
-      "Pay immediately",
-      "Ignore it and verify on the official website",
-      "Share your bank details",
-    ],
+    question: l.sim1_q3,
+    options: [l.sim1_q3_opt1, l.sim1_q3_opt2, l.sim1_q3_opt3],
     correctIndex: 1,
   ),
   Sim1Question(
-    question: "A WhatsApp message asks for your Aadhaar number for scheme benefit. Is this safe?",
-    options: [
-      "Yes, share it",
-      "No — never share Aadhaar on WhatsApp",
-    ],
+    question: l.sim1_q4,
+    options: [l.sim1_q4_opt1, l.sim1_q4_opt2],
     correctIndex: 1,
   ),
   Sim1Question(
-    question: "Scammers send urgent messages because...?",
-    options: [
-      "They are very helpful people",
-      "Panic makes people act without thinking",
-      "They work for the government",
-    ],
+    question: l.sim1_q5,
+    options: [l.sim1_q5_opt1, l.sim1_q5_opt2, l.sim1_q5_opt3],
     correctIndex: 1,
   ),
 ];
-

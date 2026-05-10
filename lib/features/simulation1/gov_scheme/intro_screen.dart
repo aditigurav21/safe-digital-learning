@@ -1,10 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:safe_digital_learning/l10n/app_localizations.dart';
+
+
 import '../../../providers/tts_provider.dart';
 import '../../../widgets/tts_toggle_button.dart';
 
-class IntroScreen extends StatefulWidget {        // ← changed to StatefulWidget
+class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
 
   @override
@@ -13,32 +16,29 @@ class IntroScreen extends StatefulWidget {        // ← changed to StatefulWidg
 
 class _IntroScreenState extends State<IntroScreen> {
 
-  // All screen text in one place — change here, TTS updates automatically
-  static const _screenTexts = [
-    "Stay Safe from Government Scheme Scams.",
-    "Many fraud calls and messages target farmers. This lesson will help you protect yourself.",
-    "You will learn:",
-    "Fake links. Bit.ly or unknown links are dangerous. Real sites end in gov.in.",
-    "Fake OTP requests. No government officer ever asks for OTP. That is a scam.",
-    "Safe information. Only share basic details. Never passwords, PINs, or full bank info.",
-    "Urgency tricks. Scammers say Act now or lose money. This is a trick to panic you.",
-    "Never trust unknown links or urgent messages asking for money or OTP. When in doubt, call your family first.",
-    "Tap Start Learning button when you are ready.",
+  List<String> _screenTexts(AppLocalizations l) => [
+    l.sim1_intro_heroTitle.replaceAll('\n', ' '),
+    l.sim1_intro_heroSubtitle.replaceAll('\n', ' '),
+    l.sim1_intro_youWillLearn,
+    l.sim1_intro_fakeLinksTitle + '. ' + l.sim1_intro_fakeLinksDesc,
+    l.sim1_intro_fakeOtpTitle + '. ' + l.sim1_intro_fakeOtpDesc,
+    l.sim1_intro_safeInfoTitle + '. ' + l.sim1_intro_safeInfoDesc,
+    l.sim1_intro_urgencyTitle + '. ' + l.sim1_intro_urgencyDesc,
+    l.sim1_intro_warningText,
+    l.sim1_intro_startBtn,
   ];
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _speakScreen();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _speakScreen());
   }
 
   void _speakScreen() {
     final tts = context.read<TtsProvider>();
     if (!tts.enabled) return;
-    final fullText = _screenTexts.join(' ');
-    tts.speak(fullText);
+    final l = AppLocalizations.of(context)!;
+    tts.speak(_screenTexts(l).join(' '));
   }
 
   @override
@@ -49,16 +49,14 @@ class _IntroScreenState extends State<IntroScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Listen to TTS toggle — if user just turned ON, read the screen
-    final ttsEnabled = context.watch<TtsProvider>().enabled;
+    context.watch<TtsProvider>().enabled;
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       appBar: AppBar(
-        title: const Text("Stay Safe Online", style: TextStyle(fontSize: 18)),
-        actions: [
-          TtsToggleButton(onToggled: _speakScreen),   // ← pass callback
-        ],
+        title: Text(l.sim1_intro_appBarTitle, style: const TextStyle(fontSize: 18)),
+        actions: [TtsToggleButton(onToggled: _speakScreen)],
         backgroundColor: Colors.blue.shade800,
         foregroundColor: Colors.white,
         centerTitle: true,
@@ -68,7 +66,6 @@ class _IntroScreenState extends State<IntroScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -76,33 +73,33 @@ class _IntroScreenState extends State<IntroScreen> {
                 color: Colors.blue.shade800,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Column(
+              child: Column(
                 children: [
-                  Icon(Icons.security, color: Colors.white, size: 52),
-                  SizedBox(height: 12),
+                  const Icon(Icons.security, color: Colors.white, size: 52),
+                  const SizedBox(height: 12),
                   Text(
-                    "Stay Safe from\nGovernment Scheme Scams",
+                    l.sim1_intro_heroTitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, height: 1.4),
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, height: 1.4),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    "Many fraud calls and messages target farmers.\nThis lesson will help you protect yourself.",
+                    l.sim1_intro_heroSubtitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: Colors.white70, height: 1.6),
+                    style: const TextStyle(fontSize: 14, color: Colors.white70, height: 1.6),
                   ),
                 ],
               ),
             ),
 
             const SizedBox(height: 24),
-            const Text("You will learn:", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(l.sim1_intro_youWillLearn, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 14),
 
-            _lessonCard(Icons.link_off, "Fake links", "Bit.ly or unknown links are dangerous. Real sites end in .gov.in", Colors.red.shade50, Colors.red),
-            _lessonCard(Icons.sms_failed, "Fake OTP requests", "No government officer ever asks for OTP. That's a scam.", Colors.orange.shade50, Colors.orange),
-            _lessonCard(Icons.lock, "Safe information", "Only share basic details — never passwords, PINs, or full bank info.", Colors.green.shade50, Colors.green),
-            _lessonCard(Icons.alarm, "Urgency tricks", "Scammers say 'Act now or lose money!' — this is a trick to panic you.", Colors.purple.shade50, Colors.purple),
+            _lessonCard(Icons.link_off, l.sim1_intro_fakeLinksTitle, l.sim1_intro_fakeLinksDesc, Colors.red.shade50, Colors.red),
+            _lessonCard(Icons.sms_failed, l.sim1_intro_fakeOtpTitle, l.sim1_intro_fakeOtpDesc, Colors.orange.shade50, Colors.orange),
+            _lessonCard(Icons.lock, l.sim1_intro_safeInfoTitle, l.sim1_intro_safeInfoDesc, Colors.green.shade50, Colors.green),
+            _lessonCard(Icons.alarm, l.sim1_intro_urgencyTitle, l.sim1_intro_urgencyDesc, Colors.purple.shade50, Colors.purple),
 
             const SizedBox(height: 20),
 
@@ -113,14 +110,14 @@ class _IntroScreenState extends State<IntroScreen> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.orange),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.warning_amber_rounded, color: Colors.deepOrange, size: 30),
-                  SizedBox(width: 12),
+                  const Icon(Icons.warning_amber_rounded, color: Colors.deepOrange, size: 30),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      "Never trust unknown links or urgent messages asking for money or OTP. When in doubt — CALL YOUR FAMILY FIRST.",
-                      style: TextStyle(fontSize: 14, height: 1.6, fontWeight: FontWeight.w500),
+                      l.sim1_intro_warningText,
+                      style: const TextStyle(fontSize: 14, height: 1.6, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
@@ -135,7 +132,7 @@ class _IntroScreenState extends State<IntroScreen> {
               child: ElevatedButton.icon(
                 onPressed: () => Navigator.pushNamed(context, '/sim1-form'),
                 icon: const Icon(Icons.play_circle_fill, size: 26),
-                label: const Text("Start Learning", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                label: Text(l.sim1_intro_startBtn, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade700,
                   foregroundColor: Colors.white,
@@ -156,7 +153,7 @@ class _IntroScreenState extends State<IntroScreen> {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: iconColor.withValues(alpha:0.3)),
+        border: Border.all(color: iconColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

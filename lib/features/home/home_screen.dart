@@ -1,37 +1,126 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:safe_digital_learning/l10n/app_localizations.dart';
 import '../../core/constants/colors.dart';
 import '../../core/services/chatbot_screen.dart';
+import '../../core/locale/locale_provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final LocaleProvider localeProvider;
+  const HomeScreen({Key? key, required this.localeProvider}) : super(key: key);
+
+  void _showLanguageSheet(BuildContext context) {
+    final langs = [
+      {'label': '🇬🇧  English', 'code': 'en'},
+      {'label': '🇮🇳  हिंदी', 'code': 'hi'},
+      {'label': '🇮🇳  मराठी', 'code': 'mr'},
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Container(
+                width: 40, height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Select Language / भाषा चुनें / भाषा निवडा',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ...langs.map((lang) {
+                final isSelected =
+                    localeProvider.locale.languageCode == lang['code'];
+                return GestureDetector(
+                  onTap: () {
+                    localeProvider.setLocale(Locale(lang['code']!));
+                    Navigator.pop(context);
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? Colors.orange.shade50
+                          : Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: isSelected
+                            ? Colors.orange
+                            : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(lang['label']!,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            )),
+                        const Spacer(),
+                        if (isSelected)
+                          const Icon(Icons.check_circle,
+                              color: Colors.orange, size: 22),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      // ✅ MERGED APPBAR (TITLE + LOGOUT)
       appBar: AppBar(
         title: const Text("Guardian Path"),
         actions: [
+          // 🌐 Language button
+          IconButton(
+            icon: const Icon(Icons.language),
+            tooltip: 'Language',
+            onPressed: () => _showLanguageSheet(context),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
             },
-          )
+          ),
         ],
       ),
 
-      // ✅ CHATBOT BUTTON (KEPT)
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => ChatbotScreen(),
-            ),
+            MaterialPageRoute(builder: (_) => ChatbotScreen()),
           );
         },
         child: const Icon(Icons.chat),
@@ -44,17 +133,14 @@ class HomeScreen extends StatelessWidget {
             children: [
               _buildHeader(),
               _buildStreakBanner(),
-
               const SizedBox(height: 24),
               _buildSectionTitle('🎮 Missions'),
               const SizedBox(height: 12),
               _buildMissionCards(context),
-
               const SizedBox(height: 24),
               _buildSectionTitle('📊 Your Progress'),
               const SizedBox(height: 12),
               _buildProgressCard(context),
-
               const SizedBox(height: 32),
             ],
           ),
@@ -211,8 +297,8 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            children: const [
+          const Row(
+            children: [
               _StatChip('3', 'Lessons', '✅'),
               _StatChip('225', 'P', '⚡'),
               _StatChip('2', 'Badges', '🏅'),
@@ -271,7 +357,7 @@ class _MissionCard extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: m.color.withOpacity(0.2), // ✅ FIXED
+                color: m.color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
@@ -286,8 +372,7 @@ class _MissionCard extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  Navigator.pushNamed(context, m.route),
+              onPressed: () => Navigator.pushNamed(context, m.route),
               child: const Text("Start"),
             ),
           ],

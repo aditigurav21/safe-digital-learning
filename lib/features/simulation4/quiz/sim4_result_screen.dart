@@ -190,9 +190,9 @@ class Sim4ResultScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: gradeColor.withOpacity(0.1),
+                  color: gradeColor.withValues(alpha:0.1),
                   border: Border.all(
-                    color: gradeColor.withOpacity(0.3),
+                    color: gradeColor.withValues(alpha:0.3),
                     width: 3,
                   ),
                 ),
